@@ -1,0 +1,24 @@
+{
+  "name": "FV_EZ_DE_Shortcuts",
+  "version": "3.0.0",
+  "description": "FV EZ DE Shortcuts",
+  "main": "index.js",
+  "repository": "tbd",
+  "author": "matt martin",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "gulp": "^3.9.1",
+    "gulp-exec": "^3.0.1",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.14"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "gulp-cli": "^2.0.1"
+  }
+}

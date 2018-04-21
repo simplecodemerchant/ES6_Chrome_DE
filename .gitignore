@@ -1,0 +1,7 @@
+.idea/
+dist/
+logs
+*.log
+.grunt
+yarn.lock
+node_modules
