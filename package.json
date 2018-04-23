@@ -10,15 +10,21 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
-    "gulp": "^3.9.1",
-    "gulp-exec": "^3.0.1",
+    "css-loader": "^0.28.11",
+    "grunt": "^1.0.2",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-webpack": "^3.1.1",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.8.3",
+    "postcss-loader": "^2.1.4",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.0.14"
   },
   "scripts": {
     "build": "webpack"
   },
-  "dependencies": {
-    "gulp-cli": "^2.0.1"
-  }
+  "dependencies": {}
 }
