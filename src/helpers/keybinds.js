@@ -1,12 +1,14 @@
 
 export default class KeyBinds {
     constructor(tests){
-        this.max = null;
+        this.clear = null;
+        this.event = null;
         this.mapped = {};
 
         this.tests = [];
 
         this.prepTests(tests);
+
     }
 
     prepTests(tests){
@@ -33,23 +35,19 @@ export default class KeyBinds {
             "k"    : 75, "l": 76, "m": 77, "n": 78, "o": 79,
             "p"    : 80, "q": 81, "r": 82, "s": 83, "t": 84,
             "u"    : 85, "v": 86, "w": 87, "x": 88, "y": 89, "z": 90,
-            "left" : 37,
-            "up"   : 38,
-            "right": 39,
-            "down" : 40
+            "left" : 37, "up" : 38, "right" : 39, "down" : 40
         };
         return alias[key];
     }
 
     check(){
-        let tests;
-        let func;
 
         for (let items of this.tests) {
 
             for ( let keys of items.t ){
                 const bool = keys.every(k => !!this.mapped[k]);
                 if ( bool ){
+                    this.event.preventDefault();
                     return items.f();
                 }
             }
@@ -58,17 +56,30 @@ export default class KeyBinds {
     }
 
     testKeys(e) {
+        clearTimeout(this.clear);
+        this.event = e;
 
         const type = {
             'keydown': true,
             'keyup': false
         };
+
+        this.clear = setTimeout(()=>{
+            this.mapped = {};
+        }, 1000);
+
         if ( e.type === 'keydown' && this.mapped[e.keyCode] ){
             return;
         }
 
         this.mapped[e.keyCode] = type[e.type] || false;
+        if ( e.ctrlKey )  this.mapped[this.mapToReadable('ctrl')] = true;
+        if ( e.shiftKey ) this.mapped[this.mapToReadable('shift')] = true;
+        if ( e.altKey )   this.mapped[this.mapToReadable('alt')] = true;
+
         if ( e.type === 'keydown' ){
+            console.log(e);
+            console.log(this.mapped);
             this.check();
         }
     }

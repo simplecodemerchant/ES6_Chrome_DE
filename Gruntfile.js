@@ -16,7 +16,7 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files: [
-                    { expand: true, src: ['src/manifest.json'], dest: 'dist/', flatten: true }
+                    { expand: true, src: ['src/static/*'], dest: 'dist/', flatten: true }
                 ]
             }
         },

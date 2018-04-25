@@ -4,10 +4,10 @@ const defaultSite = '.*?.decipherinc.com';
 const browser = getBrowser();
 
 browser.runtime.onMessage.addListener((msg, sender, handler) => {
-    console.log(msg);
-    if (msg.type === 'bookmarks'){
 
-        const getTree = browser.bookmarks.getTree((bookmarks_tree) => {
+    if ( msg.type === 'bookmarks' ){
+
+        browser.bookmarks.getTree((bookmarks_tree) => {
             handler({ folders: bookmarks_tree });
         });
 

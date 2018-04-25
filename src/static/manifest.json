@@ -7,6 +7,9 @@
   "author": "matt92martin",
   "content_scripts": [{
     "matches": ["<all_urls>"],
+    "css": [
+      "index.css"
+    ],
     "js": [
       "index.js"
 

@@ -13,9 +13,7 @@ class Index{
             type: 'sites'
         },
         ( resp ) => {
-            console.log(resp);
-            const app = new App( resp.payload );
-            app.run();
+            (new App( resp.payload )).run();
         });
 
     }

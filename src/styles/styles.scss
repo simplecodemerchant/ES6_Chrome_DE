@@ -5,8 +5,8 @@
 }
 
 .quota-page #stage {
-  flex: 1 75%;
-  transition: all 1000ms linear;
+  flex: 1 1 75%;
+  transition: all 0.7s linear;
   overflow-y: scroll;
 }
 #quotaBuddy{
@@ -16,7 +16,7 @@
   transition: all 0.3s linear;
   box-sizing: border-box;
   z-index: 2;
-  flex: 0 24%;
+  flex: 00 25%;
   height: 100%;
   max-height: 100%;
 }

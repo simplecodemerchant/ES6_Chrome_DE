@@ -14,7 +14,6 @@ export default class App {
             onExcept: (!!qsa('div.exceptions').length),
             onPortal: (window.location.href.indexOf('apps/portal/#/projects/detail') !== -1),
         };
-        console.log(this.location);
 
         this.validSite = validateSite(this.options.sites);
     }

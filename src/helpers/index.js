@@ -6,7 +6,6 @@ import {
     tqs,
     tqsa
 } from './selectors'
-
 export {
     validateSite,
     getBrowser,
