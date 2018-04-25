@@ -15,47 +15,16 @@ export default class KeyBinds {
             test['t'] = test['t'].map((t) => {
                 return t.split('+').map((key) => {
                     return this.mapToReadable(key.trim());
-                })
+                });
             });
             this.tests.push(test);
         }
     }
 
-    // mapKeys(e, callback) {
-    //     clearTimeout(this.interv);
-    //
-    //     this.map[e.keyCode] = e.type === 'keydown';
-    //     this.interv = setTimeout(() => {
-    //         this.map = {};
-    //     }, 1000);
-    //     callback(e);
-    // }
-    //
-    // foundMatch(callback, extra){
-    //
-    //     const event = extra.ev;
-    //     condition   = ( extra.cond === undefined ) ? true : extra.cond;
-    //
-    //     if ( typeof(condition) === 'array' ){
-    //         for (var cond of condition) {
-    //             if ( cond === false ){
-    //                 condition = false;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //
-    //     if ( !!condition ){
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    //         callback();
-    //     }
-    // }
-    //
     mapToReadable(key) {
         const alias = {
             //Modifiers
-            "shift": 16, "ctrl": 17, "alt": 18, 'esc': 27, 'command': 91,
+            "shift": 16, "ctrl": 17, "alt": 18, 'esc': 27, 'command': 91, 'rcommand': 93,
             //Digits
             "1" : 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57, "0": 48,
             //Letters
@@ -73,30 +42,31 @@ export default class KeyBinds {
     }
 
     check(){
-        for (let test of this.tests) {
-            let curtest = true;
+        let tests;
+        let func;
 
-            for ( let key of test.t ){
-                if ( !curtest ) continue;
-                if ( !this.mapped[key] ){
-                    curtest = false;
+        for (let items of this.tests) {
+
+            for ( let keys of items.t ){
+                const bool = keys.every(k => !!this.mapped[k]);
+                if ( bool ){
+                    return items.f();
                 }
-            }
-            if ( curtest ) {
-                test.f();
-                break;
             }
         }
         return false;
     }
 
-    testKeys(e, when) {
+    testKeys(e) {
 
         const type = {
-            'keydown': false,
-            'keyup': true
+            'keydown': true,
+            'keyup': false
         };
-        
+        if ( e.type === 'keydown' && this.mapped[e.keyCode] ){
+            return;
+        }
+
         this.mapped[e.keyCode] = type[e.type] || false;
         if ( e.type === 'keydown' ){
             this.check();
