@@ -1,9 +1,16 @@
-import { getBrowser } from '../helpers'
 const defaultSite = '.*?.decipherinc.com';
+
+function getBrowser(){
+    if ( typeof( browser ) !== 'undefined' ) return browser;
+    if ( typeof( chrome ) !== 'undefined' ) return chrome;
+    return {};
+
+}
 
 const browser = getBrowser();
 
 browser.runtime.onMessage.addListener((msg, sender, handler) => {
+    console.log('background');
 
     if ( msg.type === 'bookmarks' ){
 
