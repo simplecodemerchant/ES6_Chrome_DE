@@ -11,3 +11,7 @@ export const tqsa = (query) => {
 export const tqs = (query) => {
     return this.querySelector(query);
 };
+
+export const gid = (id) => {
+    return document.getElementById(id);
+};

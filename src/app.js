@@ -2,8 +2,8 @@ import { validateSite, qsa, qs } from './helpers'
 import acts from './actions/main'
 
 export default class App {
-    constructor( payload ) {
-        this.options = payload;
+    constructor( options ) {
+        this.options = options;
 
         this.location = {
             onQuota:  (window.location.href.indexOf('tab=quota') !== -1),
