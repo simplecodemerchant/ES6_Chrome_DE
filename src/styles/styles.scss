@@ -5,58 +5,86 @@
 }
 
 .quota-page #stage {
-  flex: 1 1 75%;
+  flex: 1 0 75%;
   transition: all 0.7s linear;
   overflow-y: scroll;
 }
 #quotaBuddy{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
   font-family: TitilliumText25L400wt, helvetica, arial, sans-serif;
   background-color: #F1F1F1;
-  border-right: 3px solid #DEDEDE;
   transition: all 0.3s linear;
   box-sizing: border-box;
   z-index: 2;
-  flex: 00 25%;
+  flex: 0 0 25%;
   height: 100%;
   max-height: 100%;
 }
 #quotaBuddy.qbhide{
-  flex: 0.000001;
+  flex: 0 0 10px;
+
+  .spQB,
+  #qbSearch,
+  #qbHead,
+  #qbTable{
+    display: none;
+  }
+
+  #qbtoggle:after{
+    content: '>'
+  }
+
+
 }
 
-#quotaBuddy.qbhide *{
-  display: none;
-}
+//#quotaBuddy.qbhide *{
+//  //display: none;
+//}
 #qbtoggle{
-  height: 40px;
+  display: flex;
+  flex: 1 0 100%;
   width: 10px;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #898989;
+  background-color: #B5B5B5;
   color: white;
   font-size: 12px;
-  line-height: 40px;
   cursor: pointer;
-  margin-left: -3px;
   z-index: 10;
-  display: none;
+  align-items: center;
+  justify-content: center;
+
+  //display: none;
+
+  &:after{
+    content: '<';
+  }
+  .qbtext{
+    flex: 1;
+    align-self: center;
+  }
+
 }
-#qbtoggle.qbhide{
-  display: block;
-}
-#quotaBuddy div#qbTable{
+
+#quotaBuddy #qbTable{
+  display: flex;
+  flex: 1 0 80%;
+  width: calc(100% - 10px);
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100% - 60px);
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-#quotaBuddy div#qbTable td{
+#quotaBuddy #qbTable td{
   height: 15px;
 }
-#quotaBuddy div#qbHead{
+#quotaBuddy #qbHead{
+  flex: 0 0 55px;
   font-weight: bold;
-  border-bottom: 3px solid #DEDEDE;
   height: 55px;
 }
+
 .spQB{
   width: 100%;
   height: 25px;
@@ -66,7 +94,7 @@
 }
 .spQBa{
   float:left;
-  width: 33.33333%;
+  width: 50%;
   height: 100%;
   color: white;
   margin: 0px;
@@ -110,33 +138,36 @@
 
 
 /*****************START QUOTA FIXES*******************/
-.shortcut-page-fix #canEditQuota{
-  margin: 0px !important;
-}
-.shortcut-page-fix .quota-sheet {
-  margin: 0px !important;
-  padding: 10px !important;
-}
-.shortcut-page-fix .quota-sheet .mb-5{
-  display: none;
-}
-.shortcut-page-fix .table.table-single-line thead{
-  background-color: #16263b;
-}
-.shortcut-page-fix .table thead tr>th{
-  color: #FFFFFF;
-}
-.shortcut-page-fix .table.table-single-line tbody tr:hover{
-  background-color: rgba(0,0,0,0.075);
-}
-.shortcut-page-fix .table thead tr th{
-  border: 1px solid #16263b;
-}
-.shortcut-page-fix .table tbody tr td{
-  box-shadow: none !important;
-  border: 1px solid #e9e9e9 !important;
-}
+.shortcut-page-fix{
 
+  #canEditQuota{
+    margin: 0px !important;
+  }
+  .quota-sheet {
+    margin: 0px !important;
+    padding: 10px !important;
+  }
+  .quota-sheet .mb-5{
+    display: none;
+  }
+  .table.table-single-line thead{
+    background-color: #16263b;
+  }
+  .table thead tr>th{
+    color: #FFFFFF;
+  }
+  .table.table-single-line tbody tr:hover{
+    background-color: rgba(0,0,0,0.075);
+  }
+  .table thead tr th{
+    border: 1px solid #16263b;
+  }
+  .table tbody tr td{
+    box-shadow: none !important;
+    border: 1px solid #e9e9e9 !important;
+  }
+
+}
 
 /*****************END QUOTA FIXES*******************/
 

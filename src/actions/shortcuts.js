@@ -1,21 +1,13 @@
-import { qs } from "../helpers"
+import { qs, misc } from "../helpers"
 
 class Shortcuts {
-
-    url(){
-        return window.location.href;
-    }
-
-    url_host(){
-        return window.location.host;
-    }
 
     url_no_host(){
         return window.location.pathname + window.location.search;
     }
 
     baseURL(){
-        return window.location.protocol + '//' + this.url_host() + '/';
+        return window.location.protocol + '//' + misc.url_host() + '/';
     }
 
     startAtPage() {

@@ -1,8 +1,10 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+
 module.exports = {
     target: 'web',
+    devtool: 'inline-source-map',
     entry: {
         'index': path.resolve(__dirname, 'src/index.js'),
         'background': path.resolve(__dirname, 'src/background/background.js'),
@@ -26,6 +28,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "[name].css",
             chunkFilename: "[id].css"
-        })
+        }),
     ]
 };

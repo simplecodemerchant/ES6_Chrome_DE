@@ -1,18 +1,19 @@
 import { validateSite, qsa, qs } from './helpers'
 import acts from './actions/main'
+import qb from './actions/quotabuddy'
 
 export default class App {
     constructor( options ) {
         this.options = options;
 
         this.location = {
-            onQuota:  (window.location.href.indexOf('tab=quota') !== -1),
-            onCamp:   (window.location.href.indexOf('tab=email') !== -1),
-            onTerm:   (window.location.href.indexOf('tab=terminate') !== -1),
-            onDrop:   (window.location.href.indexOf('tab=dropout') !== -1),
-            onSurvey: (!!qsa('body.survey-page').length),
-            onExcept: (!!qsa('div.exceptions').length),
-            onPortal: (window.location.href.indexOf('apps/portal/#/projects/detail') !== -1),
+            onQuota:  App.onQuota(),
+            onCamp:   App.onCamp(),
+            onTerm:   App.onTerm(),
+            onDrop:   App.onDrop(),
+            onSurvey: App.onSurvey(),
+            onExcept: App.onExcept(),
+            onPortal: App.onPortal(),
         };
 
         this.validSite = validateSite(this.options.sites);
@@ -23,6 +24,15 @@ export default class App {
         const exception        = qs('.exceptions .row.result pre');
         exception.style.height = (windowHeight - beforeExpection.getBoundingClientRect().bottom - 60 ) + "px";
     }
+
+
+    static onQuota() { return window.location.href.indexOf('tab=quota') !== -1 }
+    static onCamp(){ return window.location.href.indexOf('tab=email') !== -1 }
+    static onTerm(){ return window.location.href.indexOf('tab=terminate') !== -1 }
+    static onDrop(){ return window.location.href.indexOf('tab=dropout') !== -1 }
+    static onSurvey(){ return !!qsa('body.survey-page').length }
+    static onExcept(){ return !!qsa('div.exceptions').length }
+    static onPortal(){ return window.location.href.indexOf('apps/portal/#/projects/detail') !== -1 }
 
     run(){
 
@@ -35,7 +45,7 @@ export default class App {
             window.addEventListener('resize', this.windowResize);
         }
 
-        if ( this.onPortal && this.options.showModal ){
+        if ( this.location.onPortal && this.options.showModal ){
             document.querySelector('.title-row').classList.add('always-display');
         }
 
@@ -53,19 +63,10 @@ export default class App {
         } else if ( this.location.onQuota ) {
             body.classList.add( 'quota-page' );
             if ( this.options.special ) body.classList.add( 'shortcut-page-fix' );
-            //todo
-            // var qb = QuotaBuddy;
-            // qb.init();
+            qb.run()
 
         } else if ( ( this.location.onCamp || this.location.onTerm || this.location.onDrop ) && this.options.special ){
             body.classList.add( 'shortcut-page-fix' );
-        }
-
-        function escape() {
-            if ( this.location.onQuota ) {
-                // todo
-                // qb.cancel()
-            }
         }
 
     }

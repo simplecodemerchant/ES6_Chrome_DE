@@ -4,13 +4,21 @@ import {
     qsa,
     qs,
     tqs,
-    tqsa
+    tqsa,
+    gid,
+    getClosest
 } from './selectors'
+import * as misc from './misc'
+
+
 export {
     validateSite,
     getBrowser,
     qsa,
     qs,
+    gid,
     tqs,
     tqsa,
+    misc,
+    getClosest,
 }

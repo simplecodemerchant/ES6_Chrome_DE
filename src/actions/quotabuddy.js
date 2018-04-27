@@ -1,60 +1,87 @@
+import { prependTo } from "../helpers/misc"
+import { gid, qs, qsa, misc, getClosest } from '../helpers'
+
 class QuotaBuddy {
 
+    toggleQB(){
+        qs('#quotaBuddy').classList.toggle('qbhide');
+    }
+
+    hideShowAll(type) {
+        for ( let ct of qsa( '.quota-sheet .sheet-header a.'+type ) ){
+            ct.click();
+        }
+    }
+
+    gotoquota(el) {
+        const goto     = el.getAttribute('data-goto');
+        const subtable = gid(goto);
+        const sheet    = getClosest(subtable, '.quota-sheet');
+        const status   = sheet.querySelector('.quota-sheet-toggle.off');
+        if ( status ) status.click();
+
+        window.location.hash = '#' + goto;
+    }
 
     run(){
         const self = this;
 
-        var quotaBuddyHtml = `
-                <div id="quotaBuddy" class="qbhide">
+        prependTo(gid('main'), `<div id="quotaBuddy" class="qbhide">
 					<div id="qbHead">
 						<div id="qbSearch"><input type="text" name="quotaLU" placeholder="Search Quotas ..." /></div>
 						<div class="spQB">
 							<button id="hideAll" class="spQBa qbred">-</button>
 							<button id="showAll" class="spQBa qbgreen">+</button>
-							<button id="closeQB" class="spQBa qbgrey">&lt;</button>
 						</div>
 					</div>
 					<div id="qbTable">
 						<table></table>
 					</div>
-				</div>
-				<div id="qbtoggle" class="qbhide">&gt;</div>
-				`;
+				    <div id="qbtoggle"></div>
+				</div>`)
 
-        $('#main').prepend(quotaBuddyHtml);
-        $('#closeQB, #qbtoggle').on('click', function(){
-            $('#quotaBuddy').toggleClass('qbhide');
-            $('#qbtoggle').toggleClass('qbhide');
-        });
+        qs('#qbtoggle').addEventListener( 'click', self.toggleQB );
+        gid('hideAll').addEventListener('click', self.hideShowAll.bind(null, 'on'));
+        gid('showAll').addEventListener('click', self.hideShowAll.bind(null, 'off'));
 
-        this.gid('hideAll').addEventListener('click', self.hideShowAll.bind(this, 'on'));
-        this.gid('showAll').addEventListener('click', self.hideShowAll.bind(this, 'off'));
-        // this.injectJs(this.gotoquota);
+        const qBuddyT = qs('#qbTable table'),
+              qSheets = qsa('.quota-sheet');
 
-        var qBuddyT = this.q('#qbTable table'),
-            qSheets     = this.qa('.quota-sheet');
+        for ( let sheet of qSheets ){
+            const sheetName = sheet.querySelector('.sheet-name strong').innerText;
+            misc.addRow(qBuddyT, `<td>${sheetName}</td>`, "row-legend");
 
-        for ( var sheet of qSheets ){
-            var sheetName = sheet.querySelector('.sheet-name strong').innerText;
-            this.addRow(qBuddyT, `<td>${sheetName}</td>`, "row-legend");
+            const tables = sheet.querySelectorAll('table.table');
 
-            var tables = sheet.querySelectorAll('table.table');
+            for ( let table of tables ) {
+                const subtables = table.querySelectorAll('.nquota-description');
+                let rowtext = "";
 
-            for ( var table of tables ) {
-                var subtables = table.querySelectorAll('.nquota-description');
-                var rowtext = "";
-
-                for ( var st of subtables ){
-                    rowtext = `
-								<td class="quotaTogglers">
+                for ( let st of subtables ){
+                    rowtext = `<td class="quotaTogglers">
 									<a  href="javascript:void(0)" class="goto ${table.id}" data-goto="${table.id}">${st.innerText}</a>
 								</td>`;
 
-                    this.addRow(qBuddyT, rowtext);
+                    misc.addRow(qBuddyT, rowtext);
                 }
 
             }
         }
+
+        qBuddyT.addEventListener('click', function(e){
+            const classes = e.target.className.split(/\s+/);
+            if ( classes.indexOf('goto') !== -1 ){
+                return this.gotoquota(event.target);
+            }
+            return false;
+        }.bind(this));
+
+/*
+
+        // this.injectJs(this.gotoquota);
+
+
+
 
         qBuddyT.addEventListener('click', function(e){
             var classes = e.target.className.split(/\s+/);
@@ -94,9 +121,12 @@ class QuotaBuddy {
         $("tbody td.editable").on('click', function(){
             self.highlight($(this));
         });
+        */
     }
 
 }
+
+export default new QuotaBuddy();
 
 // var QuotaBuddy = {
 //
@@ -121,13 +151,7 @@ class QuotaBuddy {
 //         return document.querySelectorAll(query);
 //     },
 //
-//     getClosest: function ( elem, selector ) {
-//         for ( ; elem && elem !== document; elem = elem.parentNode ) {
-//             if ( elem.matches( selector ) ) return elem;
-//         }
-//         return null;
-//
-//     },
+
 //
 //     injectJs: function(srcFile) {
 //         var src = document.createElement('script');
@@ -192,11 +216,7 @@ class QuotaBuddy {
 //             el.appendChild(div.children[0]);
 //         }
 //     },
-//     addRow: function(table, rowtext, c){
-//         var newRow = table.insertRow(table.rows.length);
-//         if (c) newRow.classList.add(c);
-//         newRow.innerHTML = rowtext;
-//     },
+
 //
 //     init: function(){
 //

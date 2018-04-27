@@ -15,3 +15,10 @@ export const tqs = (query) => {
 export const gid = (id) => {
     return document.getElementById(id);
 };
+
+export const getClosest = ( elem, selector ) => {
+    for ( ; elem && elem !== document; elem = elem.parentNode ) {
+        if ( elem.matches( selector ) ) return elem;
+    }
+    return null;
+};

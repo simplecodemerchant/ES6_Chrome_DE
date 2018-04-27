@@ -5,9 +5,6 @@
   "description": "This extension provides keyboard shortcuts for navigating around surveys",
   "version": "3.0.0",
   "author": "matt92martin",
-  "web_accessible_resources": [
-    "index.css"
-  ],
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "css": [

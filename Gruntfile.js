@@ -28,4 +28,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default', ['clean', 'copy','webpack:dev']);
+    grunt.registerTask('prod', ['clean', 'copy','webpack:prod']);
 };
