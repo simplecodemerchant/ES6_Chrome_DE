@@ -40,6 +40,38 @@ class QuotaBuddy {
         }
     }
 
+
+    highlight(el){
+        el = el.target || el;
+        const editor = gid( "_editor" );
+
+        qsa( 'tbody td.editable' ).forEach((elem) => {
+            elem.classList.remove( 'highlightEdit' );
+        });
+        el.classList.add( 'highlightEdit' );
+        localStorage.setItem( 'quotaIndex', JSON.stringify(el.getAttribute('tabindex')) );
+
+        setTimeout( function(){
+            editor.select();
+        }, 50);
+    }
+    cancel(){
+        qs('.cancel-link').click();
+    }
+    tabForward(e){
+        if ( e.keyCode === 9 ) { //tab
+            gid('_save').click();
+
+            const curindex = parseInt(JSON.parse(localStorage.getItem('quotaIndex')));
+            const nextindex = e.shiftKey ? curindex - 1 : curindex + 1;
+
+            const nextItem = qs('[tabindex="' + nextindex + '"]');
+            this.highlight(nextItem);
+            nextItem.click();
+            e.preventDefault();
+        }
+    }
+
     run(){
         const self = this;
 
@@ -99,38 +131,17 @@ class QuotaBuddy {
         const editableTDs = qsa("tbody td.editable");
         for (let i in editableTDs){
             if ( !isNaN(parseInt(i, 10)) ){
-                editableTDs[i].setAttribute('tabindex', i);
+                editableTDs[i].setAttribute('tabindex', +i+1);
             }
         }
 
-        /*
+        const editor = gid("_editor");
+        //when tab is pressed move to next input
+        editor.addEventListener('keydown', e => this.tabForward(e));
 
-
-
-
-
-                var editor = $("#_editor");
-                //when tab is pressed move to next input
-                editor.on('keydown', function (e) {
-                    var code = e.keyCode || e.which;
-                    if (code === 9) { //tab
-                        $('#_save').get(0).click();
-
-                        var curindex = parseInt(JSON.parse(localStorage.getItem('quotaIndex')));
-                        var nextindex = e.shiftKey ? curindex - 1 : curindex + 1;
-
-                        var nextItem = $('[tabindex=' + nextindex + ']');
-                        self.highlight(nextItem);
-                        nextItem.click();
-                        e.preventDefault();
-                    }
-                });
-
-
-                $("tbody td.editable").on('click', function(){
-                    self.highlight($(this));
-                });
-                */
+        qsa("tbody td.editable").forEach((el) => {
+            el.addEventListener('click', e => this.highlight(e));
+        });
     }
 
 }

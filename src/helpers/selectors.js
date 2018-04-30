@@ -8,8 +8,8 @@ export const qs = (query) => {
 export const tqsa = (query) => {
     return this.querySelectorAll(query);
 };
-export const tqs = (query) => {
-    return this.querySelector(query);
+export const tqs = (tag, query) => {
+    return tag.querySelector(query);
 };
 
 export const gid = (id) => {

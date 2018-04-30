@@ -1,11 +1,14 @@
 import KeyBinds from '../helpers/keybinds'
 import sc from "./shortcuts"
+import {qs} from "../helpers";
+import QuotaBuddy from './quotabuddy'
+import Answers from './answers'
 
 
 export default () => {
 
     const kb = new KeyBinds([
-        { t: 'esc', f: console.log.bind(null, 'esc') },
+        { t: 'esc', f: QuotaBuddy.cancel },
         
         { t: 'ctrl+alt+s', f: sc.getState },
 
