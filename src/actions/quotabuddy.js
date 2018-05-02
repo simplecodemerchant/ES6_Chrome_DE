@@ -73,7 +73,6 @@ class QuotaBuddy {
     }
 
     run(){
-        const self = this;
 
         prependTo(gid('main'),
                 `<div id="quotaBuddy" class="qbhide">

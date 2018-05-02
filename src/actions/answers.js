@@ -1,129 +1,183 @@
-import {qs, qsa, tqs, gid} from "../helpers";
+import { qs, qsa, tqs, tqsa, gid, getPrev } from "../helpers"
 
 
 class Answers {
-    constructor(){
-        this.timeout = 5000;
+    constructor() {
+        this.timeout = 5000
     }
 
-    GM_getValue(key, def) {
-        return localStorage.getItem(key) || def;
+    GM_getValue( key, def ) {
+        return localStorage.getItem( key ) || def
     }
 
-    GM_setValue(key, value) {
-        return localStorage.setItem(key, value);
+    GM_setValue( key, value ) {
+        return localStorage.setItem( key, value )
     }
 
-    GM_deleteValue(key, callback) {
-        return localStorage.removeItem(key);
+    GM_deleteValue( key, callback ) {
+        return localStorage.removeItem( key )
     }
 
-    clearValues(){
-        this.GM_deleteValue("question");
-        this.GM_deleteValue("qlabel");
-        this.GM_deleteValue("dupecount");
-        this.GM_deleteValue("time");
-        return;
+    clearValues() {
+        this.GM_deleteValue( "question" )
+        this.GM_deleteValue( "qlabel" )
+        this.GM_deleteValue( "dupecount" )
+        this.GM_deleteValue( "time" )
     }
 
-    AutoMate(){
-        let value = '';
-        this.clearValues();
-        value = prompt('Which question do I stop at?', 'Q');
-        if (value) {
-            const d = new Date();
-            const n = d.getTime();
-            this.GM_setValue("time",n);
-            this.GM_setValue("question",value);
-            this.gotoPage();
+    AutoMate() {
+        this.clearValues()
+        let value = prompt( 'Which question do I stop at?', 'Q' )
+        if ( value ) {
+            const d = new Date()
+            const n = d.getTime()
+            this.GM_setValue( "time", n )
+            this.GM_setValue( "question", value )
+            this.gotoPage()
         }
     }
 
-    gotoPage(){
+    gotoPage() {
 
-        const time = this.GM_getValue("time",0);
+        const time = this.GM_getValue( "time", 0 )
 
-        const d = new Date();
-        const n = d.getTime();
+        const d = new Date()
+        const n = d.getTime()
 
-        this.GM_setValue("time", n);
+        this.GM_setValue( "time", n )
 
         //quit if timed out
-        if (!time || ((n - time) > this.timeout)){
-            return this.clearValues();
+        if ( !time || ( ( n - time ) > this.timeout ) ) {
+            return this.clearValues()
         }
 
-        //quit if no question set to go to
-        let value = '';
-        if (!this.GM_getValue("question")){
-            return this.clearValues();
+        // Quit if no question set
+        if ( !this.GM_getValue( "question" ) ) {
+            return this.clearValues()
         }
-        else{
-            value = this.GM_getValue("question");
-        }
+
+        let value = this.GM_getValue( "question" )
 
         //Check the new page against the old page to make sure we are progressing
-        const oldlabel = this.GM_getValue("qlabel",'');
-        let newlabel = qs("dt a").innerText;
+        const oldlabel = this.GM_getValue( "qlabel", '' )
+        let newlabel   = qs( "dt a" ).innerText
 
-        if (!newlabel){
-            newlabel = qs("dt").innerText;
+        if ( !newlabel ) {
+            newlabel = qs( "dt" ).innerText
         }
-        this.GM_setValue("qlabel", newlabel);
+        this.GM_setValue( "qlabel", newlabel )
 
-        let dupecount = this.GM_getValue("dupecount",0);
+        let dupecount = this.GM_getValue( "dupecount", 0 )
 
         //If fails to complete page 4 times then quit
-        if (oldlabel === newlabel && newlabel.indexOf("Quota sheet:") === -1){
-            if (dupecount < 3){
-                dupecount = dupecount + 1;
-                this.GM_setValue("dupecount",dupecount);
+        if ( oldlabel === newlabel && newlabel.indexOf( "Quota sheet:" ) === -1 ) {
+            if ( dupecount < 3 ) {
+                dupecount = dupecount + 1
+                this.GM_setValue( "dupecount", dupecount )
             }
-            else{
-                console.log("Failed to complete page");
-                console.log(dupecount);
-                this.clearValues();
-                return;
+            else {
+                console.log( "Failed to complete page" )
+                console.log( dupecount )
+                this.clearValues()
+                return
             }
         }
-        else{
-            this.GM_setValue("dupecount",0);
+        else {
+            this.GM_setValue( "dupecount", 0 )
         }
 
         //if at page then stop
-        if (qs("dt a").innerText === `[${value}]`){
-            return this.clearValues();
+        if ( qs( "dt a" ).innerText === `[${value}]` ) {
+            return this.clearValues()
         }
 
-        this.fillNext();
+        this.fillNext()
 
     }
 
-    getPrev(tag, cls){
-        let prev = tag.previousElementSibling;
-        while ( prev && !prev.classList.contains( cls ) ){
-            prev = prev.previousElementSibling;
-        }
-        return prev;
-    }
 
     //returns qacode value after the : so MRK:16 returns 16
-    getQACode(tag, letters){
-        const el = tqs(tag, "dd sup span");
-        const spantext = el.innerText;
-        if ( spantext.includes(`${letters}:`) ){
-            return spantext.replace(`${letters}:`, '')
+    getQACode( tag, letters ) {
+        const els = [...tqsa( tag, "dd sup span" )]
+        for ( let el of els ){
+            const spantext = el.innerText
+
+            if ( spantext.includes( `${letters}:` ) ) {
+                return spantext.replace( `${letters}:`, '' )
+            }
         }
     }
+
+    // Todo: is this used
+    range( start, end ){
+        let array = [];
+        for( let i = start; i < end; i++ ){
+            array.push(i);
+        }
+        return array;
+    }
+
+    fillPage(){
+        // Only fill dev questions if there is a term
+        // Todo
+        // const devContainer =  qsa('.devContainer')
+        // if ( tqsa(devContainer, 'div.surveyQuestion, div.question').length ){
+        //
+        //     if ( $('input:radio:checked').closest('.even, .odd').has("span:contains('TERM')").length ){
+        //         this.fillRadio();
+        //     }
+        //     return;
+        // }
+
+        const atmost = this.getQACode( 'ATM' )
+        const atleast = this.getQACode( 'ATL' )
+        const maxranks = this.getQACode( 'MRA' )
+        let   range = this.getQACode( 'VRF' )
+        const amount = this.getQACode( 'AMT' )
+        const unique =  this.getQACode( 'UNI' )
+        const exactly =  this.getQACode( 'EX' )
+        const zipcode = ( range === 'zipcode' )
+
+        if ( !zipcode ){
+            // Get number range
+            if ( range.length ){
+                range = range.replace(/range\((\d+),(\d+)\)/g, '$1,$2').split(',')
+            }
+            else{
+                // Default number range is 0-10
+                range = [ 0, 10 ]
+            }
+        }
+
+        this.fillText()
+        this.fillNumber(amount,range)
+        this.fillFloat()
+        this.fillCheckBox(atmost,atleast,exactly)
+        this.fillSelect(maxranks,unique)
+        this.fillRadio()
+        this.fillTextArea()
+        this.fillOpenSpecify()
+
+    }
+
+
+
+
 }
 
-const ans = new Answers();
+const ans = new Answers()
 
-export default ans;
+// const arr = [...qsa('.question')];
+// arr.forEach((el)=> {
+//     let prev = getPrev( el, 'qaTab' )
+//     // console.log( ans.getQACode( prev, 'ATL' ) )
+//     // console.log( ans.getQACode( prev, 'ATM' ) )
+//     // console.log( ans.getQACode( prev, 'VRF' ) )
+// });
 
-const prev =  ans.getPrev(gid('question_Q2a'), 'qaTab' );
-console.log(prev);
-console.log(ans.getQACode(prev, 'ATL') );
+export default ans
+
+
 /*
 
 
@@ -136,61 +190,9 @@ console.log(ans.getQACode(prev, 'ATL') );
 
 
 
-            range: function(start, end){
-                var array = new Array();
-                for(var i = start; i < end; i++){
-                    array.push(i);
-                }
-                return array;
-            },
 
-            fillPage: function(){
-                // Only fill dev questions if there is a term
-                if ( $('.devContainer:has(div.surveyQuestion, div.question)').length ){
 
-                    if ( $('input:radio:checked').closest('.even, .odd').has("span:contains('TERM')").length ){
-                        this.fillRadio();
-                    }
-                    return;
-                }
 
-                var atmost = this.getQACode('ATM');
-                var atleast = this.getQACode('ATL');
-                var maxranks = this.getQACode('MRA');
-                var range = this.getQACode('VRF');
-                var amount = this.getQACode('AMT');
-                var unique =  this.getQACode('UNI');
-                var exactly =  this.getQACode('EX');
-                var zipcode = (range === 'zipcode') ? true : false;
-
-                if ( !zipcode ){
-                    //get number range
-                    if (range.length){
-                        range = range.replace('range(','').replace(')','').split(',');
-                    }
-                    else{
-                        //Default number range is 0-10
-                        range = [0,10]
-                    }
-                }
-
-                this.fillText();
-
-                this.fillNumber(amount,range);
-
-                this.fillFloat();
-
-                this.fillCheckBox(atmost,atleast,exactly);
-
-                this.fillSelect(maxranks,unique);
-
-                this.fillRadio();
-
-                this.fillTextArea();
-
-                this.fillOpenSpecify();
-
-            },
 
 
             fillText: function(){

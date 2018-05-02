@@ -5,8 +5,8 @@ export const qs = (query) => {
     return document.querySelector(query);
 };
 
-export const tqsa = (query) => {
-    return this.querySelectorAll(query);
+export const tqsa = (tag, query) => {
+    return tag.querySelectorAll(query);
 };
 export const tqs = (tag, query) => {
     return tag.querySelector(query);
@@ -22,3 +22,11 @@ export const getClosest = ( elem, selector ) => {
     }
     return null;
 };
+
+export const getPrev = ( tag, cls ) => {
+    let prev = tag.previousElementSibling
+    while ( prev && !prev.classList.contains( cls ) ) {
+        prev = prev.previousElementSibling
+    }
+    return prev
+}

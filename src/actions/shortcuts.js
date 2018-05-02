@@ -25,12 +25,11 @@ class Shortcuts {
     }
 
     goTO(front, back, leading) {
-        leading = (leading === undefined || leading === true) ? '/' : '';
+        leading = ( leading === undefined || leading === true ) ? '/' : '';
         const projectAddress = this.getProject();
 
         if (projectAddress) {
-            const url = this.baseURL() + front + leading + projectAddress + back;
-            window.location.href = url;
+            window.location.href = this.baseURL() + front + leading + projectAddress + back;
         }
     }
 

@@ -6,7 +6,8 @@ import {
     tqs,
     tqsa,
     gid,
-    getClosest
+    getClosest,
+    getPrev,
 } from './selectors'
 import * as misc from './misc'
 
@@ -21,4 +22,5 @@ export {
     tqsa,
     misc,
     getClosest,
+    getPrev,
 }
