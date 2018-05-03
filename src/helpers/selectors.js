@@ -1,3 +1,28 @@
+export const isIterable = (item) => {
+    if ( item == null ) {
+        return false;
+    }
+    return typeof item[Symbol.iterator] === 'function';
+};
+
+
+function spread(elements){
+    if (elements == null) {
+        return {};
+    }
+    if ( isIterable(elements) ){
+        let objElements = {};
+        let i = 0;
+        for ( let k in elements ){
+            objElements[i] = elements[k];
+            i++;
+        }
+        return objElements;
+    }
+    return { 0: elements };
+
+}
+
 export const qsa = (query) => {
     return document.querySelectorAll(query);
 };
@@ -29,56 +54,46 @@ export const getPrev = ( tag, cls ) => {
         prev = prev.previousElementSibling
     }
     return prev
-}
+};
 
 
 
 export const q = function(sel) {
-    let selector = sel;
-    let el       = [ ...document.querySelectorAll( selector ) ];
 
     const obj = {
-        find: function ( s ) {
-            el.splice( 0, el.length );
+        n: [],
+        selector: null,
 
-            for ( let el in this.el ) {
-
-                let found = el.querySelectorAll( s );
-
-                for ( let f in found ) {
-                    if ( this.el.indexOf( f ) === -1 ) this.el.push( f )
-                }
-
+        updateContext: function(s){
+            return this.selector.split(',').map((c) => {
+                return `${c.trim()} ${s.trim()}`
+            }).join(', ');
+        },
+        search: function(s){
+            let newEls = [];
+            for ( let el of this.n ) {
+                console.log(el.querySelectorAll( s ));
+                newEls = [ ...newEls, ...el.querySelectorAll( s ) ];
             }
+        },
+
+        find: function( s ){
+            this.selector = this.updateContext(s);
+            this.v = this.search(s);
             return obj;
         },
+        has: function(){
 
-        init: function ( s ) {
-            Array.prototype.push.apply( el, document.querySelectorAll( s ) );
         },
-
-    };
-
-    function spread(elements){
-        if (elements == null) {
-            return { 0: elements };
-        }
-        if ( typeof elements[Symbol.iterator] === 'function' ){
-            let objElements = {};
-            let i = 0;
-            for ( let k in elements ){
-                objElements[i] = elements[k]
-                i++;
-            }
-            return objElements;
+        init: function(s){
+            this.selector = s;
+            this.n = [ ...document.querySelectorAll( s ) ];
         }
 
-    }
-    let spreadels = spread(el);
-    console.log(spreadels);
-    return {
-        ...spreadels,
-        selector,
 
     };
+    obj.init(sel);
+
+
+    return obj;
 };

@@ -168,8 +168,9 @@ class Answers {
 
 const ans = new Answers()
 
-const el = q('.element');
+const el = q('.question, .radio');
 console.log(el);
+console.log(el.find('.element'));
 
 // const arr = [...qsa('.question')];
 // arr.forEach((el)=> {
