@@ -1,9 +1,10 @@
-import { qs, qsa, tqs, tqsa, gid, getPrev } from "../helpers"
+import { qs, qsa, tqs, tqsa, gid, getPrev, q } from "../helpers"
 
 
 class Answers {
     constructor() {
         this.timeout = 5000
+
     }
 
     GM_getValue( key, def ) {
@@ -166,6 +167,9 @@ class Answers {
 }
 
 const ans = new Answers()
+
+const el = q('.element');
+console.log(el);
 
 // const arr = [...qsa('.question')];
 // arr.forEach((el)=> {

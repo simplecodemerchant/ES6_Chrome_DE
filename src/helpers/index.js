@@ -8,6 +8,7 @@ import {
     gid,
     getClosest,
     getPrev,
+    q
 } from './selectors'
 import * as misc from './misc'
 
@@ -23,4 +24,5 @@ export {
     misc,
     getClosest,
     getPrev,
+    q
 }
