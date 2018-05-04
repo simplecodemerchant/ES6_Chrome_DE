@@ -1,6 +1,5 @@
 import KeyBinds from '../helpers/keybinds'
 import sc from "./shortcuts"
-import {qs} from "../helpers";
 import QuotaBuddy from './quotabuddy'
 import Answers from './answers'
 

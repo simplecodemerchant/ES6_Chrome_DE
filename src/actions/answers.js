@@ -1,4 +1,5 @@
 import { qs, qsa, tqs, tqsa, gid, getPrev, q } from "../helpers"
+import $ from 'jquery'
 
 
 class Answers {
@@ -98,15 +99,20 @@ class Answers {
 
 
     //returns qacode value after the : so MRK:16 returns 16
-    getQACode( tag, letters ) {
-        const els = [...tqsa( tag, "dd sup span" )]
-        for ( let el of els ){
-            const spantext = el.innerText
+    getQACode( that, letters ) {
+        let code;
 
-            if ( spantext.includes( `${letters}:` ) ) {
-                return spantext.replace( `${letters}:`, '' )
+        that.find('dd sup span').each(function(){
+            const text = $(this).text();
+
+            if ( text.includes( `${letters}:` ) ) {
+                code = text.replace( `${letters}:`, '' )
+                return false;
             }
-        }
+        });
+
+        return code;
+
     }
 
     // Todo: is this used
@@ -168,20 +174,15 @@ class Answers {
 
 const ans = new Answers()
 
-const el = q('.question, .radio');
-console.log(el);
-const element = el.find('.element');
-console.log(element);
 
 
-
-// const arr = [...qsa('.question')];
-// arr.forEach((el)=> {
-//     let prev = getPrev( el, 'qaTab' )
-//     // console.log( ans.getQACode( prev, 'ATL' ) )
-//     // console.log( ans.getQACode( prev, 'ATM' ) )
-//     // console.log( ans.getQACode( prev, 'VRF' ) )
-// });
+const arr = $('.question');
+arr.each(function(){
+    let prev = $(this).prev('.qaTab');
+    console.log( ans.getQACode( prev, 'ATL' ) )
+    // console.log( ans.getQACode( prev, 'ATM' ) )
+    // console.log( ans.getQACode( prev, 'VRF' ) )
+});
 
 export default ans
 
