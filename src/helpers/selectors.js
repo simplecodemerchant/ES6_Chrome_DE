@@ -57,43 +57,114 @@ export const getPrev = ( tag, cls ) => {
 };
 
 
+//
+// export const q = function(sel) {
+//
+//     const obj = {
+//         n: [],
+//         selector: null,
+//
+//         pObj: function(){
+//             const publicObj = {
+//                 find: obj.find,
+//                 has: obj.has
+//             };
+//             let i = 0;
+//             for ( let k in obj.n ) {
+//                 publicObj[i] = obj.n[k];
+//                 i++;
+//             }
+//
+//             return publicObj;
+//         },
+//
+//         updateSelector: function(s){
+//             return this.selector.split(',').map((c) => {
+//                 return `${c.trim()} ${s.trim()}`
+//             }).join(', ');
+//         },
+//
+//         search: function(s){
+//             let newEls = [];
+//
+//             for ( let el of this.n ) {
+//                 newEls = [ ...newEls, ...el.querySelectorAll( s ) ];
+//             }
+//             return newEls;
+//         },
+//
+//         find: function( s ){
+//             this.selector = this.updateSelector(s);
+//
+//             this.n = this.search(s);
+//             return this.pObj();
+//         },
+//
+//         has: function(){
+//
+//         },
+//
+//         init: function(s){
+//             this.selector = s;
+//             this.n = [ ...document.querySelectorAll( s ) ];
+//
+//             return this.pObj();
+//         }
+//
+//     };
+//     return obj.init(sel);
+// };
+
 
 export const q = function(sel) {
 
-    const obj = {
-        n: [],
-        selector: null,
+    const allowedKeys = ['selector'];
 
-        updateContext: function(s){
-            return this.selector.split(',').map((c) => {
-                return `${c.trim()} ${s.trim()}`
-            }).join(', ');
-        },
-        search: function(s){
-            let newEls = [];
-            for ( let el of this.n ) {
-                console.log(el.querySelectorAll( s ));
-                newEls = [ ...newEls, ...el.querySelectorAll( s ) ];
-            }
-        },
+    function QObj() {
+        this.n = [];
+        this.selector = 'test';
+    }
 
-        find: function( s ){
-            this.selector = this.updateContext(s);
-            this.v = this.search(s);
-            return obj;
-        },
-        has: function(){
-
-        },
-        init: function(s){
-            this.selector = s;
-            this.n = [ ...document.querySelectorAll( s ) ];
+    QObj.prototype.spread = function(){
+        let i = 0;
+        for ( let k in this.n ){
+            this[i] = this.n[k];
+            i++;
         }
-
-
     };
-    obj.init(sel);
+
+    QObj.prototype.updateSelector = function(s){
+        return this.selector.split(',').map((c) => {
+            return `${c.trim()} ${s.trim()}`
+        }).join(', ');
+    };
+
+    QObj.prototype.search = function(s){
+        let newEls = [];
+
+        for ( let el of this.n ) {
+            newEls = [ ...newEls, ...el.querySelectorAll( s ) ];
+        }
+        return newEls;
+    };
+
+    QObj.prototype.find = function(s){
+        this.selector = this.updateSelector(s);
+        this.n = this.search(s);
+        return this;
+    };
+
+    QObj.prototype.init = function(s){
+        this.selector = s;
+        this.n = [ ...document.querySelectorAll( s ) ];
+        this.spread();
+        Object.keys(this).forEach((k) => {
+            console.log(`${k}: ${ !isNaN(k) || allowedKeys.indexOf(k) !== -1 }`);
+        });
+        return this;
+    };
 
 
-    return obj;
+    const publicqobj = new QObj();
+    return publicqobj.init(sel);
 };

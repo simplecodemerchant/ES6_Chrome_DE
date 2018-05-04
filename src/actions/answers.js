@@ -170,7 +170,10 @@ const ans = new Answers()
 
 const el = q('.question, .radio');
 console.log(el);
-console.log(el.find('.element'));
+const element = el.find('.element');
+console.log(element);
+
+
 
 // const arr = [...qsa('.question')];
 // arr.forEach((el)=> {
