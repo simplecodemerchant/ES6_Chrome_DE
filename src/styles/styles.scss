@@ -255,16 +255,14 @@
 
 
 /******************* Exceptions Page ******************************/
-/* .exceptions .row.result{
-	position: relative;
-	height: 400px;
+.exceptions .result-meta .col-xs-6:nth-child(1) .ng-binding{
+  cursor: pointer;
+
+  &:hover{
+    color: blue;
+    text-decoration: underline;
+  }
 }
-.exceptions .row.result .col-md-12{
-	height: 100%;
-}
-.exceptions .row.result .col-md-12 .ng-binding{
-	height: 100%;
-} */
 
 
 

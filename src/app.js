@@ -1,6 +1,9 @@
 import { validateSite, qsa, qs } from './helpers'
 import acts from './actions/main'
 import qb from './actions/quotabuddy'
+import exceptions from './actions/exceptions'
+import ans from './actions/answers'
+
 
 export default class App {
     constructor( options ) {
@@ -42,6 +45,7 @@ export default class App {
 
         if ( this.location.onExcept ){
             this.windowResize();
+            exceptions.run();
             window.addEventListener('resize', this.windowResize);
         }
 
@@ -51,12 +55,8 @@ export default class App {
 
         const body = qs( 'body' );
 
-        //todo
-        // if ( this.validSite && afm.GM_getValue( "question" ) ){
-        if ( this.validSite && false){
-            // todo
-            // afm.gotoPage();
-
+        if ( this.validSite && ans.GM_getValue( "question" ) ){
+            sc.gotoPage();
         } else if ( this.validSite && qsa( '.devToggle.expanded' ).length ){
             qsa( '.surveyInfo, .survey-info' ).forEach((el) => el.style.display = 'block');
 

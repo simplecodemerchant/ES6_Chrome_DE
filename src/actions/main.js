@@ -11,9 +11,9 @@ export default () => {
         
         { t: 'ctrl+alt+s', f: sc.getState },
 
-        { t: 'shift+right', f: console.log.bind(null, 'right') },
-        { t: 'shift+down', f: console.log.bind(null, 'down') },
-        { t: 'shift+up', f: console.log.bind(null, 'up') },
+        { t: 'shift+right', f: ans.fillNext.bind(ans) },
+        { t: 'shift+down', f: ans.fillPage.bind(ans) },
+        { t: 'shift+up', f: ans.nextPage.bind(ans) },
 
         { t: 'alt+1', f: console.log.bind(null, '1') },
         { t: 'alt+2', f: console.log.bind(null, '2') },

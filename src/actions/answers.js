@@ -115,12 +115,13 @@ class Answers {
 
     }
 
-    // Todo: is this used
+    // Unused. Why did I add this
     range( s, e ){
         return Array.from(Array((e-s+1)), (_,x) => x + s);
     }
 
     fillPage(){
+        // todo make this run per question on page.
         // Only fill dev questions if there is a term
         if ( $('.surveyQuestion, .question').length ){
             if ( $('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")').length ){
@@ -149,14 +150,14 @@ class Answers {
             }
         }
 
-        // this.fillText()
-        // this.fillNumber(amount,range)
-        // this.fillFloat()
-        // this.fillCheckBox(atleast, atmost, exactly)
-        // this.fillSelect(maxranks,unique)
-        // this.fillRadio()
-        // this.fillTextArea()
-        // this.fillOpenSpecify()
+        this.fillText()
+        this.fillNumber(amount,range)
+        this.fillFloat()
+        this.fillCheckBox(atleast, atmost, exactly)
+        this.fillSelect(maxranks,unique)
+        this.fillRadio()
+        this.fillTextArea()
+        this.fillOpenSpecify()
 
     }
 
@@ -368,18 +369,18 @@ class Answers {
             const tr = $(this).find(".even, .odd");
             tr.find("input:checkbox:checked").click();
 
-            var allCheckbox = tr.has("input:checkbox");
+            const allCheckbox = tr.has("input:checkbox");
 
-            var allterms = allCheckbox.has("span:contains('TERM')");
-            var notTerms = allterms.has("span[title*='not']");
-            var notTermsnotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
-            var trs = allCheckbox.not(allCheckbox.has("span:contains('TERM')"));
-            var notNoAnswers = trs.not(allCheckbox.has(".naRow, .no-answer"));
+            const allterms = allCheckbox.has("span:contains('TERM')");
+            const notTerms = allterms.has("span[title*='not']");
+            const notTermsnotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
+            let trs = allCheckbox.not(allCheckbox.has("span:contains('TERM')"));
+            const notNoAnswers = trs.not(allCheckbox.has(".naRow, .no-answer"));
 
 
-            if (notTermsnotNoAnswers.length){
+            if ( notTermsnotNoAnswers.length ){
                 trs = notTermsnotNoAnswers;
-            }else if (notTerms.length){
+            }else if ( notTerms.length ){
                 trs = notTerms;
             }else{
                 trs = notNoAnswers;
@@ -388,16 +389,18 @@ class Answers {
 
             notexclusive = trs.has('input:checkbox:not(.exclusive)');
 
-            if (notexclusive.length){
+            if ( notexclusive.length ){
                 trs = notexclusive;
             }
 
 
-            var tableheaders = $('.survey-q-grid-collegend, .col-legend');
-            if (tableheaders.length){
+            const tableheaders = $('.survey-q-grid-collegend, .col-legend');
+            if ( tableheaders.length ){
+                const colError = $('.col-legend.hasError');
 
-                if ( $("h3.survey-q-error-text:contains('in this column')").length || ( ( $('.col-legend.hasError').length !== $('.col-legend').length ) && $('.col-legend.hasError').length ) ){
-                    for (var i=0;i<atmost;i++){
+                // todo: Need to test this. Seem like it shouldn't work
+                if ( $("h3.survey-q-error-text:contains('in this column')").length || ( ( colError.length !== $('.col-legend').length ) && colError.length ) ){
+                    for ( let i=0; i<atmost; i++ ){
                         trs.eq(i).each(function(){
                             self.fillOE($(this));
                             $(this).find("input:checkbox").click();
@@ -406,7 +409,7 @@ class Answers {
                 }else{
                     trs.each(function(){
                         self.fillOE($(this));
-                        for (var i=0; i<atmost; i++){
+                        for ( let i=0; i<atmost; i++ ){
                             $(this).find("input:checkbox").eq(i).click();
                         }
                     });
@@ -477,21 +480,17 @@ class Answers {
         function isNum(x){
             return isNaN(x-0);
         }
-        const rows = $('.even, .odd');
-        const parent = rows.closest('')
-        const row = $('.even, .odd').sort(function(a,b){
+        let rows = $('.even, .odd');
+        const parent = rows.parent();
+
+        rows = rows.sort(function(a,b){
             let x = $(a).find('.qaCode').text().trim().replace("[r","").replace(/].*|\n\r*.*/g, '');
             let y = $(b).find('.qaCode').text().trim().replace("[r","").replace(/].*|\n\r*.*/g, '');
 
-            if(isNum(x)){
-                return x > y ? 1 : -1;
-            }
-            else{
-                return parseInt(x) > parseInt(y) ? 1 : -1;
-            }
-        }).appendTo();
+            return parseInt(x) > parseInt(y) ? 1 : -1;
+        });
 
-        console.log(row);
+        parent.append(rows);
 
     }
 
@@ -500,7 +499,6 @@ class Answers {
 
 const ans = new Answers()
 
-ans.disableRandomization();
 // const arr = $('.question');
 // arr.each(function(){
 //     let prev = $(this).prev('.qaTab');

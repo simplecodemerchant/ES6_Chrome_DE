@@ -4,6 +4,8 @@ export const url = () => window.location.href;
 
 export const url_host = () => window.location.host;
 
+export const url_origin = () => window.location.origin;
+
 export const createEl = (str) => {
     const div = document.createElement('div');
     div.innerHTML = str;
