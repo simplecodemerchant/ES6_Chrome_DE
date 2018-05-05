@@ -1,7 +1,7 @@
 import KeyBinds from '../helpers/keybinds'
 import sc from "./shortcuts"
 import QuotaBuddy from './quotabuddy'
-import Answers from './answers'
+import ans from './answers'
 
 
 export default () => {
@@ -25,7 +25,7 @@ export default () => {
         { t: 'alt+8', f: console.log.bind(null, '8') },
         { t: 'alt+9', f: console.log.bind(null, '9') },
 
-        { t: 'alt+d', f: console.log.bind(null, 'd') },
+        { t: 'alt+d', f: ans.disableRandomization.bind(ans) },
         { t: 'alt+g', f: console.log.bind(null, 'g') },
 
         // Go to Survey without variables
