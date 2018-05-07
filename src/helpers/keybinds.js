@@ -78,6 +78,7 @@ export default class KeyBinds {
         if ( e.altKey )   this.mapped[this.mapToReadable('alt')] = true;
 
         if ( e.type === 'keydown' ){
+            console.log('wow');
             this.check();
         }
     }

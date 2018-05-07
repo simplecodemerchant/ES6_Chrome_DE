@@ -1,7 +1,6 @@
 import { qs, qsa, tqs, tqsa, gid, getPrev, q } from "../helpers"
 import $ from 'jquery'
 
-
 class Answers {
     constructor() {
         this.timeout = 5000
@@ -99,19 +98,45 @@ class Answers {
 
 
     //returns qacode value after the : so MRK:16 returns 16
-    getQACode( that, letters ) {
-        let code;
+    getQACode( that ) {
+        let codes = {
+            'ATM': '',
+            'ATL': '',
+            'MRA': '',
+            'AMT': '',
+            'UNI': '',
+            'EX':  '',
+            'VRF': ''
+        };
 
-        that.find('dd sup span').each(function(){
+        that.prev('.qaTab').find('sup.qaCode span').each(function(){
             const text = $(this).text();
+            let [label, value] = text.split(':');
 
-            if ( text.includes( `${letters}:` ) ) {
-                code = text.replace( `${letters}:`, '' )
-                return false;
+            if ( codes.hasOwnProperty( label ) ){
+
+                if ( label === 'VRF' ){
+                    if ( value !== 'zipcode' ){
+                        if ( value.length ){
+                            value = value.replace(/range\((\d+),(\d+)\)/g, '$1 $2').split(' ').map(d => parseInt(d));
+                        } else {
+                            value = [ 0, 10 ];
+                        }
+                    }
+                }
+
+                if ( label === 'UNI' ){
+                    value = value.split(',');
+                }
+                if ( ['ATM','ATL','MRA','AMT','EX'].indexOf(label) !== -1 ){
+                    value = parseInt(value);
+                }
+                codes[label] = value;
             }
+
         });
 
-        return code;
+        return codes;
 
     }
 
@@ -121,43 +146,39 @@ class Answers {
     }
 
     fillPage(){
+        const self = this;
         // todo make this run per question on page.
         // Only fill dev questions if there is a term
-        if ( $('.surveyQuestion, .question').length ){
+        if ( $('.devContainer').length ){
             if ( $('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")').length ){
                 this.fillRadio();
             }
             return;
         }
 
-        const atmost = this.getQACode( 'ATM' )
-        const atleast = this.getQACode( 'ATL' )
-        const maxranks = this.getQACode( 'MRA' )
-        let   range = this.getQACode( 'VRF' )
-        const amount = this.getQACode( 'AMT' )
-        const unique =  this.getQACode( 'UNI' )
-        const exactly =  this.getQACode( 'EX' )
-        const zipcode = ( range === 'zipcode' )
+        $('.question, .surveyQuestion').not('.survey-q-question').each(function(){
 
-        if ( !zipcode ){
-            // Get number range
-            if ( range.length ){
-                range = range.replace(/range\((\d+),(\d+)\)/g, '$1 $2').split(' ')
-            }
-            else{
-                // Default number range is 0-10
-                range = [ 0, 10 ]
-            }
-        }
+            const question = $(this);
 
-        this.fillText()
-        this.fillNumber(amount,range)
-        this.fillFloat()
-        this.fillCheckBox(atleast, atmost, exactly)
-        this.fillSelect(maxranks,unique)
-        this.fillRadio()
-        this.fillTextArea()
-        this.fillOpenSpecify()
+            const {
+                AMT,
+                ATL,
+                MRA,
+                ATM,
+                UNI,
+                VRF,
+                EX
+            } = self.getQACode( question );
+
+            self.fillText(question)
+            self.fillNumber(question, AMT,VRF)
+            self.fillFloat(question)
+            self.fillCheckBox(question, ATL, ATM, EX)
+            self.fillSelect(question, MRA, UNI)
+            self.fillRadio(question)
+            self.fillTextArea(question)
+            self.fillOpenSpecify(question)
+        });
 
     }
 
@@ -497,16 +518,6 @@ class Answers {
 
 }
 
-const ans = new Answers()
-
-// const arr = $('.question');
-// arr.each(function(){
-//     let prev = $(this).prev('.qaTab');
-//     // console.log( ans.getQACode( prev, 'ATL' ) )
-//     // console.log( ans.getQACode( prev, 'ATM' ) )
-//     // console.log( ans.getQACode( prev, 'VRF' ) )
-// });
-
-export default ans
+export default new Answers()
 
 

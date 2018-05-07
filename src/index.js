@@ -2,6 +2,7 @@ import { getBrowser } from './helpers'
 import App from './app'
 import './styles/styles.scss'
 
+
 class Index{
 
     constructor(){
