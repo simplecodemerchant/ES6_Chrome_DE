@@ -1,6 +1,7 @@
 import { getBrowser } from './helpers'
 import App from './app'
 import './styles/styles.scss'
+import $ from 'jquery'
 
 
 class Index{
@@ -20,6 +21,7 @@ class Index{
     }
 }
 
-
-const entry = new Index();
-entry.run();
+$(function(){
+    const entry = new Index();
+    entry.run();
+});

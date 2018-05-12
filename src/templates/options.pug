@@ -1,0 +1,39 @@
+doctype html
+html
+    head
+        title FocusVision Keyboard Shortcuts for Decipher
+        link(href="options.css")
+        - cssurl = 'https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css'
+        link(href=cssurl)
+
+    body
+        div(class='ui container')
+            div(class='form-container')
+
+                h1(class="ui center aligned header") Server List
+
+                div(class="ui form")
+
+                    div(class="field")
+                        label Sites
+                        textarea(id="sites")
+
+                    div(class="field")
+                        div(class="ui checkbox")
+                            input(type="checkbox" name="special" id="special")
+                            label(for="special" class="ilabel") Look and Feel overrides
+
+                    div(class="field")
+                        div(class="ui checkbox")
+                            input(type="checkbox" name="showmodal" id="showmodal")
+                            label(for="showmodal" class="ilabel") Show portal modal (Use at own risk. This is no longer supported)
+
+                    br
+                    br
+
+                    div(class="field")
+                        button(id="save" class="ui primary button") Save
+
+                    div(class="field" id="status")
+
+        script(src="options.js")

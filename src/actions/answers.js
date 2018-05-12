@@ -147,11 +147,10 @@ class Answers {
 
     fillPage(){
         const self = this;
-        // todo make this run per question on page.
         // Only fill dev questions if there is a term
         if ( $('.devContainer').length ){
             if ( $('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")').length ){
-                this.fillRadio();
+                self.fillRadio();
             }
             return;
         }
@@ -177,20 +176,19 @@ class Answers {
             self.fillSelect(question, MRA, UNI)
             self.fillRadio(question)
             self.fillTextArea(question)
-            self.fillOpenSpecify(question)
         });
 
     }
 
-    fillText(){
+    fillText(question){
+        const text = question.filter('.text').find(".element input:text");
 
-        const text = $('.text').find(".element input:text");
         if ( text.length ){
             let textstr, that;
 
             text.each(function() {
                 that = $(this);
-                textstr = that.closest('tr').find('td').text();
+                textstr = that.closest('.element').find('.cell-text label').text();
 
                 if ( textstr.match(/e-?mail/gi) ){
                     that.val('test@email.com').trigger('change');
@@ -206,15 +204,15 @@ class Answers {
         }
     }
 
-    //Currently only works for selects
-    fillOpenSpecify(){
+    // Currently only works for selects
+    fillOpenSpecify(question){
 
-        const text = $("input:text");
+        const text = question.find(".row-legend input:text");
         if ( text.length ){
             let select;
 
             text.each(function() {
-                select = $(this).closest('tr').find('td select');
+                select = $(this).closest('.element').find('select');
                 if ( select.length && select.val() !== -1 ){
                     $(this).val(93612).trigger('change');
                 }
@@ -222,26 +220,29 @@ class Answers {
         }
     }
 
-    fillNumber(amount,range){
+    fillNumber(q, amount, range){
         const self = this;
+        const question = q.filter('.number');
 
-        if ( amount ){
+        if ( Number.isInteger(amount) ){
 
-            const numbers = $('.number tr:has(input:text), .number tr:has(input[type="tel"])');
+            const numbers = question.find('.row:has(input:text), .row:has(input[type="tel"])');
             if ( !numbers.length ){
-                return false;
+                return;
             }
 
             let count      = numbers.length;
             let newamount  = Math.floor( amount / count );
-            let lastamount = newamount + ( amount - ( newamount*count ) );
+            let lastamount = newamount + ( amount - ( newamount * count ) );
             let num_el;
 
-            if ( $(".groupingRows").length ){
+
+            if ( question.find(".groupingRows").length ){
 
                 numbers.each(function(){
 
                     num_el = $(this).find('.element input:text, .element input[type="tel"]');
+
 
                     count = num_el.length;
                     newamount = Math.floor( amount / count );
@@ -277,10 +278,10 @@ class Answers {
         }
         else{
 
-            const numbers = $(".number").find('input:text, input[type="tel"]');
+            const numbers = question.find('input:text, input[type="tel"]');
             if ( numbers.length ){
 
-                const qtext = $('.survey-q-question-text, .question-text').text();
+                const qtext = question.find('.survey-q-question-text, .question-text').text();
                 if ( numbers.length === 1 && qtext.match(/(age|old are you)/gi) ){
                     numbers.val('33').trigger('change');
                 } else {
@@ -293,13 +294,12 @@ class Answers {
 
     }
 
-    fillFloat(){
-        const float = $(".float input:text");
+    fillFloat(question){
+        const float = question.filter('.float').find('input:text');
 
-        if ( !float.length ){
-            return false;
+        if ( float.length ){
+            float.val(10).trigger('change');
         }
-        float.val(10).trigger('change');
     }
 
     getRandomInt(min, max) {
@@ -307,7 +307,7 @@ class Answers {
     }
 
     fillOE(tr){
-        const text = tr.find("input:text");
+        const text = tr.find(".row-legend input:text");
         if ( text.length ){
             text.each(function() {
                 $(this).val(93612).trigger('change');
@@ -315,63 +315,59 @@ class Answers {
         }
     }
 
-    fillTextArea(){
-        const textarea = $('textarea');
+    fillTextArea(question){
+        const textarea = question.find('textarea');
         if ( textarea.length ){
             textarea.val('Autofill');
         }
     }
 
-    fillRadio(){
+    fillRadio(question){
         const self = this;
-        const tableheaders = $('.col-legend, .survey-q-grid-collegend');
+        const tableheaders = question.find('.col-legend, .survey-q-grid-collegend');
 
-        const ans = $('.answers');
+        const tr = question.filter('.radio').find(".even:has('input:radio'), .odd:has('input:radio')");
 
-        ans.each(function(){
-            const tr = $(this).find(".even:has('input:radio'), .odd:has('input:radio')");
+        tr.find("input:radio").prop('checked', false).trigger('change');
 
-            tr.find("input:radio").prop('checked', false).trigger('change');
+        if ( tableheaders.length ){
 
-            if ( tableheaders.length ){
-
-                const badheaders = tableheaders.has("span:contains('TERM')").map(function(){
-                    return tableheaders.index( $(this) );
-                });
+            const badheaders = tableheaders.has("span:contains('TERM')").map(function(){
+                return tableheaders.index( $(this) );
+            });
 
 
-                tr.each(function(){
+            tr.each(function(){
 
-                    self.fillOE( $(this) );
+                self.fillOE( $(this) );
 
-                    let radio = $(this).find("input:radio");
-                    if ( badheaders.length && ( badheaders.length !== radio.length ) ){
-                        radio = radio.filter( function(i) {
-                            return badheaders.index(i) === -1;
-                        });
-                    }
-
-                    radio = radio.eq( Math.floor(Math.random()*radio.length));
-                    radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
-
-                });
-            } else{
-
-                const allterms = tr.has("span:contains('TERM')").not(tr.has("input:text"));
-                const notterms = allterms.has("span[title*='not']");
-                const noterms = tr.not(tr.has("span:contains('TERM')")).not(tr.has("input:text"));
-                let rows = noterms;
-
-                if ( notterms.length ){
-                    rows = notterms;
+                let radio = $(this).find("input:radio");
+                if ( badheaders.length && ( badheaders.length !== radio.length ) ){
+                    radio = radio.filter( function(i) {
+                        return badheaders.index(i) === -1;
+                    });
                 }
 
-                if ( rows.length ) {
-                    let radio = rows.eq(Math.floor(Math.random()*rows.length)).find('input:radio');
-                    radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
-                }
+                radio = radio.eq( Math.floor(Math.random()*radio.length));
+                radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
+
+            });
+        } else{
+
+            const allterms = tr.has("span:contains('TERM')").not(tr.has("input:text"));
+            const notterms = allterms.has("span[title*='not']");
+            let rows = tr.not(tr.has("span:contains('TERM')")).not(tr.has("input:text"));
+
+
+            if ( notterms.length ){
+                rows = notterms;
             }
-        });
+
+            if ( rows.length ) {
+                let radio = rows.eq(Math.floor(Math.random()*rows.length)).find('input:radio');
+                radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
+            }
+        }
     }
 
     shuffleArray(arr){
@@ -379,93 +375,105 @@ class Answers {
     }
 
 
-    fillCheckBox(atleast=1, atmost=atleast, exactly){
+    fillCheckBox(q, atleast=1, atmost, exactly){
         const self = this;
+        const question = q.filter('.checkbox');
+
+        atmost = ( isNaN(atmost) ) ? atmost : atleast;
 
         if ( exactly ){
             atleast = atmost = exactly;
         }
+        const tr = question.find(".even, .odd");
 
-        $('.answers').each(function(){
-            const tr = $(this).find(".even, .odd");
-            tr.find("input:checkbox:checked").click();
+        tr.find("input:checkbox:checked").click();
 
-            const allCheckbox = tr.has("input:checkbox");
+        const allCheckbox = tr.has("input:checkbox");
 
-            const allterms = allCheckbox.has("span:contains('TERM')");
-            const notTerms = allterms.has("span[title*='not']");
-            const notTermsnotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
-            let trs = allCheckbox.not(allCheckbox.has("span:contains('TERM')"));
-            const notNoAnswers = trs.not(allCheckbox.has(".naRow, .no-answer"));
-
-
-            if ( notTermsnotNoAnswers.length ){
-                trs = notTermsnotNoAnswers;
-            }else if ( notTerms.length ){
-                trs = notTerms;
-            }else{
-                trs = notNoAnswers;
-            }
+        const allterms = allCheckbox.has("span:contains('TERM')");
+        const notTerms = allterms.has("span[title*='not']");
+        const notTermsnotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
+        let trs = allCheckbox.not(allCheckbox.has("span:contains('TERM')"));
+        const notNoAnswers = trs.not(allCheckbox.has(".naRow, .no-answer"));
 
 
-            notexclusive = trs.has('input:checkbox:not(.exclusive)');
+        if ( notTermsnotNoAnswers.length ){
+            trs = notTermsnotNoAnswers;
+        }else if ( notTerms.length ){
+            trs = notTerms;
+        }else{
+            trs = notNoAnswers;
+        }
 
-            if ( notexclusive.length ){
-                trs = notexclusive;
-            }
+
+        const notexclusive = trs.has('input:checkbox:not(.exclusive)');
+
+        if ( notexclusive.length ){
+            trs = notexclusive;
+        }
 
 
-            const tableheaders = $('.survey-q-grid-collegend, .col-legend');
-            if ( tableheaders.length ){
-                const colError = $('.col-legend.hasError');
 
-                // todo: Need to test this. Seem like it shouldn't work
-                if ( $("h3.survey-q-error-text:contains('in this column')").length || ( ( colError.length !== $('.col-legend').length ) && colError.length ) ){
-                    for ( let i=0; i<atmost; i++ ){
-                        trs.eq(i).each(function(){
-                            self.fillOE($(this));
-                            $(this).find("input:checkbox").click();
-                        });
-                    }
-                }else{
-                    trs.each(function(){
-                        self.fillOE($(this));
-                        for ( let i=0; i<atmost; i++ ){
-                            $(this).find("input:checkbox").eq(i).click();
-                        }
-                    });
-                }
+        const tableheaders = question.find('.survey-q-grid-collegend, .col-legend');
+        if ( tableheaders.length ){
+            const colError = question.find('.col-legend.hasError');
+            const groupingCols = question.find('.groupingCols');
 
-            }
-            else{
-                trs = self.shuffleArray(trs);
+            // todo: Need to test this. Seems like it shouldn't work
+            if ( groupingCols.length || question.find(".survey-q-error-text:contains('in this column')").length || ( ( colError.length !== $('.col-legend').length ) && colError.length ) ){
+
                 for ( let i=0; i<atmost; i++ ){
                     trs.eq(i).each(function(){
-
                         self.fillOE($(this));
                         $(this).find("input:checkbox").click();
                     });
                 }
+
+            }else{
+                trs.each(function(){
+
+                    self.fillOE($(this));
+                    for ( let i=0; i<atmost; i++ ){
+                        $(this).find("input:checkbox").eq(i).click();
+                    }
+                });
+
             }
-        });
+
+        }
+        else{
+            trs = self.shuffleArray(trs);
+            for ( let i=0; i<atmost; i++ ){
+                trs.eq(i).each(function(){
+
+                    self.fillOE($(this));
+                    $(this).find("input:checkbox").click();
+                });
+            }
+        }
     }
 
-    fillSelect(maxranks, unique){
-        const select = $('select');
+    fillSelect(question, maxranks, unique){
+        const self = this;
+        const select = question.filter('.select').find('select');
+        if ( select.length ){
 
-        if ( maxranks ){
-            for ( let i=0; i<=maxranks; i++ ){
-                select.eq(i).val(i);
+            self.fillOpenSpecify(question)
+
+            if ( maxranks ){
+                for ( let i=0; i<=maxranks; i++ ){
+                    select.eq(i).val(i).trigger('change');
+                }
+
+            } else if ( unique.indexOf('cols') !== -1 ){
+
+                for ( let i=0; i<=select.length; i++){
+                    select.eq(i).val(i).trigger('change');
+                }
+
+            } else{
+                select.val(question.find('select option').eq(1).val()).trigger('change');
             }
-
-        } else if ( unique === 'cols' ){
-
-            for ( let i=0; i<=select.length; i++){
-                select.eq(i).val(i);
-            }
-
-        } else{
-            select.val($('select option').eq(1).val());
         }
     }
 
@@ -479,7 +487,7 @@ class Answers {
     nextPage(){
         $('input:submit, button:submit').removeAttr('disabled').click();
 
-        //for quotas popups
+        // For quotas popups
         $('button.ui-button').click()
     }
 
@@ -490,10 +498,6 @@ class Answers {
             radio = $(this).find('input:radio').eq(index);
             radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
         });
-    }
-
-    toggleRandomization(){
-        this.disableRandomization();
     }
 
     disableRandomization(){
