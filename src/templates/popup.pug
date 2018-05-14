@@ -1,0 +1,28 @@
+extends template.pug
+
+block css
+    link(rel="stylesheet" href="css/popup.css")
+
+block content
+    div(class="container")
+        div(id="update-bookmark" class="hide")
+            form(id="update-bookmark-form")
+                label(for="title") Title:
+                input(type="text" id="title" name="title")
+                label(for="url") URL:
+                input(type="text" id="url" name="url")
+                input(type="hidden" id="dateAdded" name="dateAdded")
+                input(type="hidden" id="id" name="id")
+                input(type="hidden" id="parentId" name="parentId")
+                input(type="hidden" id="index" name="index")
+                div(class="buttons")
+                    button(class="btn" id="save" type="input") Save
+                    button(class="btn" id="cancel" type="input") Cancel
+
+        div(class="input-container")
+            input(type="text" placeholder="Search..." name="bookmarksearch" class="bookmark-search" autofocus)
+
+        div(class="bookmark-list")
+
+block scripts
+    script(src="popup.js")

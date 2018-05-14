@@ -8,6 +8,8 @@ module.exports = {
     entry: {
         'index': path.resolve(__dirname, 'src/index.js'),
         'background': path.resolve(__dirname, 'src/background/background.js'),
+        'options': path.resolve(__dirname, 'src/background/options.js'),
+        'popup': path.resolve(__dirname, 'src/background/popup.js'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -26,7 +28,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "[name].css",
+            filename: "css/[name].css",
             chunkFilename: "[id].css"
         }),
     ]

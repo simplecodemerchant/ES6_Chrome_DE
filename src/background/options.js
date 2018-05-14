@@ -1,11 +1,13 @@
+import '../styles/options.scss'
 const defaultSite = '.*?.decipherinc.com';
 
 const browser = browser || chrome;
 
 function save_options() {
+    console.log('save');
     const sites = document.getElementById('sites').value.split(/\s+|\n+|[,]+/);
     const special = document.getElementById('special').checked;
-    const showModal = document.getElementById('show-modal').checked;
+    const showModal = document.getElementById('showmodal').checked;
 
     if ( sites.indexOf( defaultSite ) === -1 ){
         sites.push( defaultSite );

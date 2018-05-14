@@ -1,4 +1,4 @@
-var webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./webpack.config.js');
 
 module.exports = function(grunt) {
 
@@ -22,12 +22,23 @@ module.exports = function(grunt) {
         },
         clean: ['./dist'],
         pug: {
-            default : {
+            dev : {
+                options: {
+                    pretty: true,
+                    debug: true
+                },
+                files: {
+                    'dist/options.html': 'src/templates/options.pug',
+                    'dist/popup.html': 'src/templates/popup.pug',
+                }
+            },
+            prod : {
                 options: {
                     debug: true
                 },
                 files: {
-                    'dist/options.html': 'src/templates/options.pug'
+                    'dist/options.html': 'src/templates/options.pug',
+                    'dist/popup.html': 'src/templates/popup.pug',
                 }
             }
         }
@@ -38,6 +49,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-pug');
 
-    grunt.registerTask('default', ['clean', 'copy', 'pug:default', 'webpack:dev']);
-    grunt.registerTask('prod', ['clean', 'copy','webpack:prod']);
+    grunt.registerTask('default', ['clean', 'copy', 'pug:dev', 'webpack:dev']);
+    grunt.registerTask('prod', ['clean', 'copy', 'pug:prod', 'webpack:prod']);
 };

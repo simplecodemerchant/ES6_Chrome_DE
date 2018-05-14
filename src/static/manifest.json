@@ -8,7 +8,7 @@
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "css": [
-      "index.css"
+      "css/index.css"
     ],
     "js": [
       "index.js"
@@ -27,5 +27,12 @@
     "tabs",
     "bookmarks",
     "unlimitedStorage"
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html"
+  },
+  "browser_action": {
+    "default_title": "FV DE",
+    "default_popup": "popup.html"
+  }
 }
