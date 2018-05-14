@@ -11,14 +11,14 @@
       "css/index.css"
     ],
     "js": [
-      "index.js"
+      "js/index.js"
 
     ],
     "run_at": "document_end"
   }],
   "background": {
     "scripts": [
-      "background.js"
+      "js/background.js"
     ]
   },
   "permissions": [
