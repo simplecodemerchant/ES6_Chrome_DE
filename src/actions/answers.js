@@ -1,4 +1,3 @@
-import { qs, qsa, tqs, tqsa, gid, getPrev, q } from "../helpers"
 import $ from 'jquery'
 
 class Answers {
@@ -15,7 +14,7 @@ class Answers {
         return localStorage.setItem( key, value )
     }
 
-    GM_deleteValue( key, callback ) {
+    GM_deleteValue( key ) {
         return localStorage.removeItem( key )
     }
 
@@ -61,10 +60,10 @@ class Answers {
 
         //Check the new page against the old page to make sure we are progressing
         const oldlabel = this.GM_getValue( "qlabel", '' )
-        let newlabel   = qs( "dt a" ).innerText
+        let newlabel   = $( "dt a" ).text()
 
         if ( !newlabel ) {
-            newlabel = qs( "dt" ).innerText
+            newlabel = $( "dt" ).text()
         }
         this.GM_setValue( "qlabel", newlabel )
 
@@ -88,7 +87,7 @@ class Answers {
         }
 
         //if at page then stop
-        if ( qs( "dt a" ).innerText === `[${value}]` ) {
+        if ( newlabel === `[${value}]` ) {
             return this.clearValues()
         }
 
@@ -147,15 +146,23 @@ class Answers {
 
     fillPage(){
         const self = this;
+        const questions = $('.question, .surveyQuestion').not('.survey-q-question');
+        const dev =  $('.devContainer');
+
         // Only fill dev questions if there is a term
-        if ( $('.devContainer').length ){
-            if ( $('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")').length ){
-                self.fillRadio();
+        if ( dev.length ){
+            const bad = questions.find('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")');
+            const devquestion = dev.find(questions).has( bad );
+
+            if ( devquestion.length ){
+                devquestion.each(function(){
+                    self.fillRadio( $(this) );
+                });
             }
             return;
         }
 
-        $('.question, .surveyQuestion').not('.survey-q-question').each(function(){
+        questions.each(function(){
 
             const question = $(this);
 
@@ -325,6 +332,12 @@ class Answers {
     fillRadio(question){
         const self = this;
         const tableheaders = question.find('.col-legend, .survey-q-grid-collegend');
+        const settings = question.find('.grid').data('settings');
+
+        let grouping = 'row'
+        if ( settings && settings.indexOf('group-by-col') !== -1 ){
+            grouping = 'col';
+        }
 
         const tr = question.filter('.radio').find(".even:has('input:radio'), .odd:has('input:radio')");
 
@@ -336,22 +349,33 @@ class Answers {
                 return tableheaders.index( $(this) );
             });
 
+            if ( grouping === 'col' ){
 
-            tr.each(function(){
+                let lengths = tr.map(function () {
+                    return $(this).find('input:radio').length;
+                })
+                const picked = tr.eq(Math.floor( Math.random() * Math.max(...lengths) )).find('input:radio');
+                picked.siblings('.fir-icon').length ? picked.siblings('.fir-icon').click() : picked.click();
 
-                self.fillOE( $(this) );
+            } else {
 
-                let radio = $(this).find("input:radio");
-                if ( badheaders.length && ( badheaders.length !== radio.length ) ){
-                    radio = radio.filter( function(i) {
-                        return badheaders.index(i) === -1;
-                    });
-                }
+                tr.each(function(){
 
-                radio = radio.eq( Math.floor(Math.random()*radio.length));
-                radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
+                    self.fillOE( $(this) );
 
-            });
+                    let radio = $(this).find("input:radio");
+                    if ( badheaders.length && ( badheaders.length !== radio.length ) ){
+                        radio = radio.filter( function(i) {
+                            return badheaders.index(i) === -1;
+                        });
+                    }
+
+                    radio = radio.eq( Math.floor(Math.random()*radio.length));
+                    radio.siblings('.fir-icon').length ? radio.siblings('.fir-icon').click() : radio.click();
+
+                });
+            }
+
         } else{
 
             const allterms = tr.has("span:contains('TERM')").not(tr.has("input:text"));

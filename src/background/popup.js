@@ -116,11 +116,10 @@ class Popup{
             url: that.data('url')
         });
 
-        window.close();
+        // window.close();
     }
 
-    gotourlback() {
-        let that = $(this);
+    gotourlback( that ){
 
         this.browser.tabs.create({
             active: false,
@@ -190,21 +189,23 @@ class Popup{
     }
 
     mouse( e ){
+        const target = $(e.target);
         switch (e.which) {
             case 3:
-                this.load_bookmark($(this).data());
+                this.load_bookmark(target.data());
                 break;
             case 2:
-                this.gotourlback.call($(this));
+                this.gotourlback(target);
                 break;
             default:
-                this.gotourl.call($(this));
+                this.gotourl(target);
                 break;
         }
     }
 
     add_events(){
         const self = this;
+
         this.bookmark_search.on('keydown keyup', e => self.list_action(e) );
 
         this.bookmark_list.on('mousedown', '.book-wrap', e => self.mouse(e) );

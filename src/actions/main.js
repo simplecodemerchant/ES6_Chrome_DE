@@ -15,18 +15,18 @@ export default () => {
         { t: 'shift+down', f: ans.fillPage.bind(ans) },
         { t: 'shift+up', f: ans.nextPage.bind(ans) },
 
-        { t: 'alt+1', f: console.log.bind(null, '1') },
-        { t: 'alt+2', f: console.log.bind(null, '2') },
-        { t: 'alt+3', f: console.log.bind(null, '3') },
-        { t: 'alt+4', f: console.log.bind(null, '4') },
-        { t: 'alt+5', f: console.log.bind(null, '5') },
-        { t: 'alt+6', f: console.log.bind(null, '6') },
-        { t: 'alt+7', f: console.log.bind(null, '7') },
-        { t: 'alt+8', f: console.log.bind(null, '8') },
-        { t: 'alt+9', f: console.log.bind(null, '9') },
+        { t: 'alt+1', f: ans.straightLine.bind(ans,1) },
+        { t: 'alt+2', f: ans.straightLine.bind(ans,2) },
+        { t: 'alt+3', f: ans.straightLine.bind(ans,3) },
+        { t: 'alt+4', f: ans.straightLine.bind(ans,4) },
+        { t: 'alt+5', f: ans.straightLine.bind(ans,5) },
+        { t: 'alt+6', f: ans.straightLine.bind(ans,6) },
+        { t: 'alt+7', f: ans.straightLine.bind(ans,7) },
+        { t: 'alt+8', f: ans.straightLine.bind(ans,8) },
+        { t: 'alt+9', f: ans.straightLine.bind(ans,9) },
 
         { t: 'alt+d', f: ans.disableRandomization.bind(ans) },
-        { t: 'alt+g', f: console.log.bind(null, 'g') },
+        { t: 'alt+g', f: ans.AutoMate.bind(ans) },
 
         // Go to Survey without variables
         { t: 'alt+t', f: sc.goTO.bind(sc, 'survey', '?mm') },
@@ -38,7 +38,7 @@ export default () => {
         { t: 'alt+h', f: sc.goToPage.bind(sc) },
 
         // Edit quotas if on quota page
-        { t: 'alt+e', f: console.log.bind(null, 'e') },
+        // { t: 'alt+e', f: console.log.bind(null, 'e') },
 
         // Go to report 2010
         { t: 'alt+r', f: sc.goTO.bind(sc, 'report', '') },
