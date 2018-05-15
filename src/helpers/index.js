@@ -3,12 +3,9 @@ import getBrowser from './getBrowser'
 import {
     qsa,
     qs,
-    tqs,
-    tqsa,
     gid,
     getClosest,
-    getPrev,
-    q
+    getPrev
 } from './selectors'
 import * as misc from './misc'
 
@@ -19,10 +16,7 @@ export {
     qsa,
     qs,
     gid,
-    tqs,
-    tqsa,
     misc,
     getClosest,
-    getPrev,
-    q
+    getPrev
 }

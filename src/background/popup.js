@@ -1,54 +1,51 @@
-import $jQuery from 'jquery'
+import $ from 'jquery'
 import getBrowser  from '../helpers/getBrowser'
 import '../styles/popup.scss'
 
-(($) => {
+class Popup{
+    constructor(){
+        this.browser = getBrowser();
+        this.cached_bookmarks = [];
 
-    const browser = getBrowser();
+        console.log(this.browser);
+        this.bookmark_search = $('.bookmark-search');
+        this.bookmark_list = $('.bookmark-list');
+        this.update_bookmark_btn = $('#update-bookmark');
+        this.update_bookmark_form = $('#update-bookmark-form');
+    }
 
-    let cached_bookmarks = [];
-    const bookmark_search = $('.bookmark-search');
-    const bookmark_list = $('.bookmark-list');
-    const update_bookmark = $('#update-bookmark');
-    const update_bookmark_form = $('#update-bookmark-form');
-
-    function getSearch() {
-        browser.storage.local.get({'popup_search': ''}, (res) => {
+    get_search(){
+        this.browser.storage.local.get({'popup_search': ''}, (res) => {
             const value = res['popup_search'];
             if (value !== undefined) {
-                bookmark_search.val(value);
-                bookmark_search.select();
+                this.bookmark_search.val(value);
+                this.bookmark_search.select();
             }
         });
     }
 
-    getSearch();
-
-    function setSearch() {
-
-        browser.storage.local.set({'popup_search': bookmark_search.val()});
+    set_search(){
+        this.browser.storage.local.set({'popup_search': this.bookmark_search.val()});
     }
 
-    function filter(obj, search) {
+    filter( obj, search ){
         const book_title = obj.title.toLowerCase();
         const searchlow = search.toLowerCase();
 
         return book_title.indexOf(searchlow) !== -1;
     }
 
-
-    function filter_bookmarks(array) {
-        const search = bookmark_search.val();
+    filter_bookmarks( array ){
+        const search = this.bookmark_search.val();
         return array.filter((obj) => {
-            return filter(obj, search);
+            return this.filter(obj, search);
         });
     }
 
+    list_bookmarks() {
 
-    function list_bookmarks() {
-
-        bookmark_list.find('.book-wrap').remove();
-        let filtered_books = filter_bookmarks(cached_bookmarks);
+        this.bookmark_list.find('.book-wrap').remove();
+        let filtered_books = this.filter_bookmarks(this.cached_bookmarks);
 
         let div;
 
@@ -60,13 +57,12 @@ import '../styles/popup.scss'
                 .data(book)
                 .text(book.title);
 
-            bookmark_list.append(div);
+            this.bookmark_list.append(div);
         }
-        move(1);
+        this.move(1);
     }
 
-
-    function flatten_bookmarks(bookmarks) {
+    flatten_bookmarks( bookmarks ){
 
         let books = [];
 
@@ -86,18 +82,16 @@ import '../styles/popup.scss'
 
         flatten(bookmarks.folders);
         return books;
-
     }
 
-
-    function get_all_bookmarks() {
+    get_all_bookmarks() {
         return new Promise((res, rej) => {
-            browser.runtime.sendMessage({
+            this.browser.runtime.sendMessage({
                     type: 'bookmarks'
                 },
                 (response) => {
                     if (response){
-                        res(flatten_bookmarks(response))
+                        res(this.flatten_bookmarks(response))
                     }
                     else {
                         rej('No bookmarks found')
@@ -107,85 +101,74 @@ import '../styles/popup.scss'
 
     }
 
+    update_bookmark_list() {
+        this.get_all_bookmarks().then((response) => {
 
-    function update_bookmark_list() {
-        get_all_bookmarks().then((response) => {
-
-            cached_bookmarks = response;
-            list_bookmarks();
+            this.cached_bookmarks = response;
+            this.list_bookmarks();
 
         });
     }
 
-    update_bookmark_list();
-
-
-    function gotourl() {
-        let that = $(this);
-
-        browser.tabs.create({
+    gotourl( that ) {
+        this.browser.tabs.create({
             active: true,
             url: that.data('url')
         });
 
-        window.close();
+        // window.close();
     }
 
-    function gotourlback() {
-        let that = $(this);
+    gotourlback( that ){
 
-        browser.tabs.create({
+        this.browser.tabs.create({
             active: false,
             url: that.data('url')
         });
     }
 
-    function move(direction) {
-        let books = bookmark_list.find('.book-wrap');
-        let selected = $('.selected');
-        let idx = books.index(selected);
+    move( direction ) {
+        const books = this.bookmark_list.find('.book-wrap');
+        const selected = $('.selected');
+        const idx = books.index(selected) + direction;
+        const newselected = books.eq(idx);
 
-        const newidx = idx + direction;
-        const newselected = books.eq(newidx);
-
-        if ((newidx >= 0) && newselected && (newidx <= (books.length - 1))) {
+        if ((idx >= 0) && newselected && (idx <= (books.length - 1))) {
             selected.removeClass('selected');
             newselected.addClass('selected');
         }
-
     }
 
-    function list_action(e) {
+    list_action( e ) {
         if (38 === e.keyCode) {
             e.preventDefault();
-            return e.type === 'keydown' ? move(-1) : null;
+            return e.type === 'keydown' ? this.move(-1) : null;
         } else if (40 === e.keyCode) {
             e.preventDefault();
-            return e.type === 'keydown' ? move(1) : null;
+            return e.type === 'keydown' ? this.move(1) : null;
         } else if (13 === e.keyCode) {
-            gotourl.call($('.book-wrap.selected'));
+            this.gotourl($('.book-wrap.selected'));
         }
-        setSearch();
-        list_bookmarks();
+        this.set_search();
+        this.list_bookmarks();
     }
 
-
-    function clearForm() {
-        update_bookmark_form.find('input:text, input:hidden').val('');
-        update_bookmark.addClass('hide');
+    clear_form() {
+        this.update_bookmark_form.find('input:text, input:hidden').val('');
+        this.update_bookmark_btn.addClass('hide');
     }
 
-    function loadBookmark(data) {
-        update_bookmark.removeClass('hide');
-        update_bookmark_form.find('input:text, input:hidden').each(function () {
+    load_bookmark( data ){
+        this.update_bookmark_btn.removeClass('hide');
+        this.update_bookmark_form.find('input:text, input:hidden').each(function () {
             const that = $(this);
             const value = data[that.attr('id')];
             that.val(value);
         });
     }
 
-    function updateBookmark() {
-        const formData = update_bookmark_form.serializeArray().map((data) => {
+    update_bookmark() {
+        const formData = this.update_bookmark_form.serializeArray().map((data) => {
             const obj = {};
             obj[data.name] = data.value;
             return obj;
@@ -194,55 +177,65 @@ import '../styles/popup.scss'
                 return Object.assign(obj, data);
             }, {});
 
-
         const obj = {};
         obj['title'] = formData.title;
         obj['url'] = formData.url;
         if (obj['title'] !== undefined || obj['url'] !== undefined) {
-            browser.bookmarks.update(formData.id, obj, () => {
-                clearForm();
-                update_bookmark_list();
+            this.browser.bookmarks.update(formData.id, obj, () => {
+                this.clear_form();
+                this.update_bookmark_list();
             });
         }
-
     }
 
-
-    function mouse(e) {
+    mouse( e ){
+        const target = $(e.target);
         switch (e.which) {
             case 3:
-                loadBookmark($(this).data());
+                this.load_bookmark(target.data());
                 break;
             case 2:
-                gotourlback.call($(this));
+                this.gotourlback(target);
                 break;
             default:
-                gotourl.call($(this));
+                this.gotourl(target);
                 break;
         }
     }
 
-    bookmark_search.on('keydown keyup', list_action);
-    bookmark_list.on('mousedown', '.book-wrap', mouse);
-    bookmark_list.contextmenu(() => {
-        return false;
-    });
-    update_bookmark.contextmenu(() => {
-        return false;
-    });
+    add_events(){
+        const self = this;
 
-    $('.btn').on('click', (e) => {
-        e.preventDefault();
-    });
+        this.bookmark_search.on('keydown keyup', e => self.list_action(e) );
 
-    $('#cancel').on('click', clearForm);
-    $('#save').on('click', updateBookmark);
+        this.bookmark_list.on('mousedown', '.book-wrap', e => self.mouse(e) );
 
+        this.bookmark_list.contextmenu(() => {
+            return false;
+        });
 
-    // Takes a bit for the popup to load even though the page says it loaded
-    setTimeout(() => {
-        $(".bookmark-search").focus();
-    }, 100);
+        this.update_bookmark_btn.contextmenu(() => {
+            return false;
+        });
+
+        $('.btn').on('click', e => e.preventDefault() );
+        $('#cancel').on('click', e => self.clear_form() );
+        $('#save').on('click', e => self.update_bookmark() );
 
 
-})($jQuery);
+        // Takes a bit for the popup to load even though the page says it loaded
+        setTimeout(() => {
+            $(".bookmark-search").focus();
+        }, 100);
+    }
+
+    run(){
+        this.get_search();
+        this.update_bookmark_list();
+        this.add_events();
+
+    }
+}
+
+const popup = new Popup();
+popup.run();

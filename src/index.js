@@ -22,6 +22,5 @@ class Index{
 }
 
 $(function(){
-    const entry = new Index();
-    entry.run();
+    (new Index()).run();
 });
