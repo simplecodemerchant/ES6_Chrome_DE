@@ -41,6 +41,16 @@ module.exports = function(grunt) {
                     'dist/popup.html': 'src/templates/popup.pug',
                 }
             }
+        },
+        compress: {
+            main: {
+                options: {
+                    archive: 'distzip/decipher_shortcuts.zip'
+                },
+                files: [
+                    { expand: true, cwd: 'dist/', src: ['**'], dest: '/'}
+                ]
+            }
         }
     });
 
@@ -48,7 +58,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-pug');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.registerTask('default', ['clean', 'copy', 'pug:dev', 'webpack:dev']);
-    grunt.registerTask('prod', ['clean', 'copy', 'pug:prod', 'webpack:prod']);
+    grunt.registerTask('prod', ['clean', 'copy', 'pug:prod', 'webpack:prod', 'compress']);
 };
