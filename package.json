@@ -1,5 +1,5 @@
 {
-  "name": "FV_EZ_DE_Shortcuts",
+  "name": "decipher_shortcuts",
   "version": "3.0.0",
   "description": "FV EZ DE Shortcuts",
   "main": "index.js",
@@ -27,7 +27,9 @@
     "webpack-cli": "^2.0.14"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "build:dev": "webpack --watch",
+    "start": "grunt"
   },
   "dependencies": {}
 }

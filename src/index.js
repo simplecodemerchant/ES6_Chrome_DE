@@ -1,20 +1,18 @@
 import { getBrowser } from './helpers'
 import App from './app'
 import './styles/styles.scss'
-import $ from 'jquery'
-
+import $ from './helpers/jquery'
+import Prank, { RightDate } from './helpers/prank'
 
 class Index{
 
-    constructor(){
-        this.browser = getBrowser();
-    }
-
     run(){
-        this.browser.runtime.sendMessage({
+        console.log('running')
+        getBrowser().runtime.sendMessage({
             type: 'sites'
         },
         ( resp ) => {
+            if ( resp.payload.specialx2 && RightDate() ) { Prank() }
             (new App( resp.payload )).run();
         });
 

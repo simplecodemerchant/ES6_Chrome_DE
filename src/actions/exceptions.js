@@ -1,4 +1,4 @@
-import $ from 'jquery'
+import $ from '../helpers/jquery'
 import { url_origin } from '../helpers/misc'
 
 class Exceptions {
