@@ -16,6 +16,7 @@ browser.runtime.onMessage.addListener((msg, sender, handler) => {
         browser.storage.sync.get({
                 sites: [ defaultSite ],
                 special: true,
+                specialx2: true,
                 showModal: false
             },
             ( items ) => {

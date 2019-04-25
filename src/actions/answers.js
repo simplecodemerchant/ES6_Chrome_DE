@@ -1,4 +1,4 @@
-import $ from 'jquery'
+import $ from '../helpers/jquery'
 
 class Answers {
     constructor() {
@@ -108,10 +108,9 @@ class Answers {
             'VRF': ''
         };
 
-        that.prev('.qaTab').find('sup.qaCode span').each(function(){
+        that.prevAll('.qaTab').first().find('sup.qaCode span').each(function(){
             const text = $(this).text();
             let [label, value] = text.split(':');
-
             if ( codes.hasOwnProperty( label ) ){
 
                 if ( label === 'VRF' ){
@@ -122,6 +121,7 @@ class Answers {
                             value = [ 0, 10 ];
                         }
                     }
+
                 }
 
                 if ( label === 'UNI' ){
@@ -147,12 +147,12 @@ class Answers {
     fillPage(){
         const self = this;
         const questions = $('.question, .surveyQuestion').not('.survey-q-question');
-        const dev =  $('.devContainer');
+        const devQs =  $('.devContainer').find(questions);
 
         // Only fill dev questions if there is a term
-        if ( dev.length ){
+        if ( devQs.length ){
             const bad = questions.find('input:radio:checked').nextAll('.qaCode').has('span:contains("TERM")');
-            const devquestion = dev.find(questions).has( bad );
+            const devquestion = devQs.has( bad );
 
             if ( devquestion.length ){
                 devquestion.each(function(){
@@ -177,7 +177,7 @@ class Answers {
             } = self.getQACode( question );
 
             self.fillText(question)
-            self.fillNumber(question, AMT,VRF)
+            self.fillNumber(question, AMT, VRF)
             self.fillFloat(question)
             self.fillCheckBox(question, ATL, ATM, EX)
             self.fillSelect(question, MRA, UNI)
@@ -188,7 +188,7 @@ class Answers {
     }
 
     fillText(question){
-        const text = question.filter('.text').find(".element input:text");
+        const text = question.filter('.text').find(".element input:text, .element input[type='tel']");
 
         if ( text.length ){
             let textstr, that;
@@ -227,7 +227,8 @@ class Answers {
         }
     }
 
-    fillNumber(q, amount, range){
+    fillNumber(q, amount, range=[0,100]){
+
         const self = this;
         const question = q.filter('.number');
 
@@ -286,15 +287,20 @@ class Answers {
         else{
 
             const numbers = question.find('input:text, input[type="tel"]');
+
             if ( numbers.length ){
 
                 const qtext = question.find('.survey-q-question-text, .question-text').text();
                 if ( numbers.length === 1 && qtext.match(/(age|old are you)/gi) ){
+
                     numbers.val('33').trigger('change');
+
                 } else {
-                    numbers.each(function() {
-                        $(this).val( self.getRandomInt(range[0],range[1]) ).trigger('change');
-                    });
+
+                    numbers.each( function () {
+                        $( this ).val( self.getRandomInt( range[ 0 ], range[ 1 ] ) ).trigger( 'change' );
+                    } );
+
                 }
             }
         }
@@ -398,12 +404,17 @@ class Answers {
         return arr.sort(function() { return 0.5 - Math.random() });
     }
 
+    getAtMost(atmost, trs){
+        if ( typeof atmost === 'number' ) return atmost;
+
+        return Math.ceil(trs.length / 2);
+    }
 
     fillCheckBox(q, atleast=1, atmost, exactly){
         const self = this;
         const question = q.filter('.checkbox');
 
-        atmost = ( isNaN(atmost) ) ? atmost : atleast;
+        atmost = typeof atmost === 'number' ? atmost : undefined;
 
         if ( exactly ){
             atleast = atmost = exactly;
@@ -414,21 +425,20 @@ class Answers {
 
         const allCheckbox = tr.has("input:checkbox");
 
-        const allterms = allCheckbox.has("span:contains('TERM')");
-        const notTerms = allterms.has("span[title*='not']");
-        const notTermsnotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
+        const allTerms = allCheckbox.has("span:contains('TERM')");
+        const notTerms = allTerms.has("span[title*='not']");
+        const notTermsNotNoAnswers = notTerms.not(notTerms.find(".naRow, .no-answer"));
         let trs = allCheckbox.not(allCheckbox.has("span:contains('TERM')"));
         const notNoAnswers = trs.not(allCheckbox.has(".naRow, .no-answer"));
 
 
-        if ( notTermsnotNoAnswers.length ){
-            trs = notTermsnotNoAnswers;
-        }else if ( notTerms.length ){
+        if ( notTermsNotNoAnswers.length ) {
+            trs = notTermsNotNoAnswers;
+        } else if ( notTerms.length ) {
             trs = notTerms;
-        }else{
+        } else {
             trs = notNoAnswers;
         }
-
 
         const notexclusive = trs.has('input:checkbox:not(.exclusive)');
 
@@ -436,42 +446,55 @@ class Answers {
             trs = notexclusive;
         }
 
-
-
         const tableheaders = question.find('.survey-q-grid-collegend, .col-legend');
+
         if ( tableheaders.length ){
             const colError = question.find('.col-legend.hasError');
             const groupingCols = question.find('.groupingCols');
 
-            // todo: Need to test this. Seems like it shouldn't work
             if ( groupingCols.length || question.find(".survey-q-error-text:contains('in this column')").length || ( ( colError.length !== $('.col-legend').length ) && colError.length ) ){
 
-                for ( let i=0; i<atmost; i++ ){
-                    trs.eq(i).each(function(){
-                        self.fillOE($(this));
-                        $(this).find("input:checkbox").click();
-                    });
-                }
+                atmost = atmost === undefined ? atleast : atmost;
+                const cols = trs.intoColumns('.element');
 
-            }else{
+                let picked;
+                cols.forEach((col) => {
+                    picked = self.shuffleArray(col).slice(0, atmost);
+
+                    if (picked.length){
+                        picked.forEach((pick) => {
+                            self.fillOE($(pick).closest('.row'));
+                            $(pick).click();
+                        })
+                    }
+                });
+
+            } else {
+
+                const termHeader = tableheaders.has('span:contains(TERM)');
+                const termIndex = tableheaders.indexes(termHeader);
+
+                atmost = atmost === undefined ? atleast : atmost;
+                let inputs;
                 trs.each(function(){
-
                     self.fillOE($(this));
+
+                    inputs = $(this).find("input:checkbox").not( $(this).find('input:checkbox').eqs(termIndex) ).shuffle();
                     for ( let i=0; i<atmost; i++ ){
-                        $(this).find("input:checkbox").eq(i).click();
+                        inputs.eq(i).click();
                     }
                 });
 
             }
 
-        }
-        else{
+        } else {
             trs = self.shuffleArray(trs);
+            atmost = self.getAtMost(atmost, trs);
+
             for ( let i=0; i<atmost; i++ ){
                 trs.eq(i).each(function(){
-
                     self.fillOE($(this));
-                    $(this).find("input:checkbox").click();
+                    $(this).find("input:checkbox").click().trigger('change');
                 });
             }
         }

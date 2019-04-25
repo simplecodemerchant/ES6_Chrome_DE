@@ -50,7 +50,7 @@ export default class App {
         }
 
         if ( this.location.onPortal && this.options.showModal ){
-            document.querySelector('.title-row').classList.add('always-display');
+            qs('.title-row').classList.add('always-display');
         }
 
         const body = qs( 'body' );

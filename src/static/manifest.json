@@ -32,7 +32,10 @@
     "page": "options.html"
   },
   "browser_action": {
-    "default_title": "FV DE",
-    "default_popup": "popup.html"
+    "default_title": "FV Decipher",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "Deciphericon.png"
+    }
   }
 }

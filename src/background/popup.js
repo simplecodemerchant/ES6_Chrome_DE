@@ -1,4 +1,4 @@
-import $ from 'jquery'
+import $ from '../helpers/jquery'
 import getBrowser  from '../helpers/getBrowser'
 import '../styles/popup.scss'
 
