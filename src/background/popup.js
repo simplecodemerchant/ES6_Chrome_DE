@@ -3,15 +3,18 @@ import getBrowser  from '../helpers/getBrowser'
 import '../styles/popup.scss'
 
 class Popup{
+
     constructor(){
         this.browser = getBrowser();
         this.cached_bookmarks = [];
 
-        console.log(this.browser);
         this.bookmark_search = $('.bookmark-search');
         this.bookmark_list = $('.bookmark-list');
         this.update_bookmark_btn = $('#update-bookmark');
         this.update_bookmark_form = $('#update-bookmark-form');
+
+        this.active_tab = $('.tab').filter((_,el) => $(el).data('tab') === 'bookmark');
+        this.active_tab.addClass('active');
     }
 
     get_search(){
@@ -221,12 +224,33 @@ class Popup{
         $('.btn').on('click', e => e.preventDefault() );
         $('#cancel').on('click', e => self.clear_form() );
         $('#save').on('click', e => self.update_bookmark() );
+        $('.tab').on('click', e => self.tab(e));
 
 
         // Takes a bit for the popup to load even though the page says it loaded
         setTimeout(() => {
             $(".bookmark-search").focus();
         }, 100);
+    }
+
+    changeTab(el){
+        this.active_tab.removeClass('active');
+        this.active_tab = $(el);
+        this.active_tab.addClass('active');
+
+        const tab = this.active_tab.data('tab');
+
+        if ( tab === 'bookmark' ){
+            $('#info').addClass('hidden');
+            $('#bookmarks').removeClass('hidden');
+        } else if ( tab === 'info' ) {
+            $('#bookmarks').addClass('hidden');
+            $('#info').removeClass('hidden');
+        }
+    }
+
+    tab(e){
+        this.changeTab(e.target);
     }
 
     run(){
@@ -236,6 +260,7 @@ class Popup{
 
     }
 }
-
-const popup = new Popup();
-popup.run();
+$(function(){
+    window.Popup = new Popup();
+    window.Popup.run();
+});

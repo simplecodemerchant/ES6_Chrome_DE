@@ -16,19 +16,18 @@ $.fn.maxLength = function( selector ){
     return max;
 };
 
-$.fn.intoColumns = function( selector ){
-    const max = this.maxLength(selector);
-
+$.fn.intoColumns = function(selector){
     const columns = [];
-    let col = [];
-    for (let i=0; i<max; i++){
-        col = []
-        this.each((_, el) => {
-            col.push($(el).find( selector ).get(i))
-        })
-        columns.push(col)
-    }
-    return columns;
+    this.each((_, row) => {
+        $(row).find(selector).each((i, cell) => {
+            if ( typeof columns[i] === 'undefined' ){
+                columns.push([cell]);
+            } else {
+                columns[i].push(cell);
+            }
+        });
+    });
+    return columns
 };
 
 $.fn.indexes = function(els){

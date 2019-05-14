@@ -1,5 +1,7 @@
 import { prependTo } from "../helpers/misc"
 import { gid, qs, qsa, misc, getClosest } from '../helpers'
+import $ from '../helpers/jquery'
+import App from '../app';
 
 class QuotaBuddy {
 
@@ -56,7 +58,11 @@ class QuotaBuddy {
         }, 50);
     }
     cancel(){
-        qs('.cancel-link').click();
+        if (App.onQuota()){
+            const cancel = $('.cancel-link');
+            cancel[0].click();
+
+        }
     }
     tabForward(e){
         if ( e.keyCode === 9 ) { //tab

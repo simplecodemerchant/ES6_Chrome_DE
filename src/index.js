@@ -1,5 +1,6 @@
 import { getBrowser } from './helpers'
 import App from './app'
+import KB from './kb'
 import './styles/styles.scss'
 import $ from './helpers/jquery'
 import Prank, { RightDate } from './helpers/prank'
@@ -14,6 +15,11 @@ class Index{
         ( resp ) => {
             if ( resp.payload.specialx2 && RightDate() ) { Prank() }
             (new App( resp.payload )).run();
+
+            const kb = new KB(['decipher.zendesk.com']);
+            if (kb.onKB()){
+                kb.run();
+            }
         });
 
     }

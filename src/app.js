@@ -17,6 +17,7 @@ export default class App {
             onSurvey: App.onSurvey(),
             onExcept: App.onExcept(),
             onPortal: App.onPortal(),
+            onDashboard: App.onDashboard(),
         };
 
         this.validSite = validateSite(this.options.sites);
@@ -36,8 +37,13 @@ export default class App {
     static onSurvey(){ return !!qsa('body.survey-page').length }
     static onExcept(){ return !!qsa('div.exceptions').length }
     static onPortal(){ return window.location.href.indexOf('apps/portal/#/projects/detail') !== -1 }
+    static onDashboard(){ return window.location.href.indexOf('apps/dashboard') !== -1 }
 
     run(){
+
+        if ( this.location.onDashboard ){
+            return;
+        }
 
         if ( this.validSite )   {
             acts();

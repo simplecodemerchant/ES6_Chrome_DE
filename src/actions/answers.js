@@ -459,12 +459,11 @@ class Answers {
 
                 let picked;
                 cols.forEach((col) => {
-                    picked = self.shuffleArray(col).slice(0, atmost);
-
+                    picked = self.shuffleArray(col).filter((item) => $(item).has('input:checkbox').length).slice(0, atmost);
                     if (picked.length){
                         picked.forEach((pick) => {
                             self.fillOE($(pick).closest('.row'));
-                            $(pick).click();
+                            $(pick).find('input:checkbox').click();
                         })
                     }
                 });
