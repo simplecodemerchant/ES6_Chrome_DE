@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        clean: ['./dist'],
+        clean: ['./dist', './distzip'],
         pug: {
             dev : {
                 options: {
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
             },
             prod : {
                 options: {
-                    debug: true
+                    debug: false
                 },
                 files: {
                     'dist/options.html': 'src/templates/options.pug',

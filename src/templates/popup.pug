@@ -18,11 +18,109 @@ block content
                 div(class="buttons")
                     button(class="btn" id="save" type="input") Save
                     button(class="btn" id="cancel" type="input") Cancel
+        div(id="tabs")
+            a(href="#" class='tab' data-tab="bookmark") Bookmarks
+            a(href="#" class='tab' data-tab="info") Info
 
-        div(class="input-container")
-            input(type="text" placeholder="Search..." name="bookmarksearch" class="bookmark-search" autofocus)
+        div(id="bookmarks" class="element")
+            div(class="input-container")
+                input(type="text" placeholder="Search..." name="bookmarksearch" class="bookmark-search" autofocus)
 
-        div(class="bookmark-list")
+            div(class="bookmark-list")
+
+        div(id="info" class="element hidden")
+            h2 Shortcuts
+            h3 Survey
+            table
+                tr
+                    td ctrl+alt+s
+                    td Get the state of the survey page
+                tr
+                    td shift+right
+                    td Fill in answers and submit page
+                tr
+                    td shift+down
+                    td Fill in answers
+                tr
+                    td shift+up
+                    td Submit page
+                tr
+                    td alt+d
+                    td De-randomize rows
+                tr
+                    td alt+g
+                    td Continuously answer pages and submit until a given question
+                tr
+                    td alt+f
+                    td Go to survey one page mode
+                tr
+                    td alt+1
+                    td Straight line column 1
+                tr
+                    td alt+2
+                    td Straight line column 2
+                tr
+                    td alt+3
+                    td Straight line column 3
+                tr
+                    td alt+4
+                    td Straight line column 4
+                tr
+                    td alt+5
+                    td Straight line column 5
+                tr
+                    td alt+6
+                    td Straight line column 6
+                tr
+                    td alt+7
+                    td Straight line column 7
+                tr
+                    td alt+8
+                    td Straight line column 8
+                tr
+                    td alt+9
+                    td Straight line column 9
+
+            h3 Quotas
+            table
+                tr
+                    td esc
+                    td Stop current action/close quota edits
+
+            h3 Navigation
+            table
+                tr
+                    td alt+t
+                    td Start the survey
+                tr
+                    td alt+s
+                    td Start the survey at a given question
+                tr
+                    td alt+h
+                    td Start the survey at a given question and ignore conditions
+                tr
+                    td alt+r
+                    td Go to Report 2010
+                tr
+                    td alt+p
+                    td Go to the portal
+                tr
+                    td alt+q
+                    td Go to the quotas
+                tr
+                    td alt+w
+                    td Go to the sst report
+                tr
+                    td alt+u
+                    td Go to the upload page
+                tr
+                    td alt+v
+                    td Go to version control
+                tr
+                    td alt+c
+                    td Go to CrossTabs
+
+
 
 block scripts
     script(src="js/popup.js")
