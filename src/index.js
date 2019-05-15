@@ -1,6 +1,6 @@
 import { getBrowser } from './helpers'
 import App from './app'
-import KB from './kb'
+import KB from './actions/kb'
 import './styles/styles.scss'
 import $ from './helpers/jquery'
 import Prank, { RightDate } from './helpers/prank'
@@ -17,7 +17,7 @@ class Index{
             (new App( resp.payload )).run();
 
             const kb = new KB(['decipher.zendesk.com']);
-            if (kb.onKB()){
+            if (kb.onKB){
                 kb.run();
             }
         });
