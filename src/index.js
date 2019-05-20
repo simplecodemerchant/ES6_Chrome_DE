@@ -17,9 +17,6 @@ class Index{
             (new App( resp.payload )).run();
 
             const kb = new KB(['decipher.zendesk.com']);
-            if (kb.onKB){
-                kb.run();
-            }
         });
 
     }

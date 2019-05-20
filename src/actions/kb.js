@@ -36,6 +36,10 @@ export default class KB {
         return sections;
     }
 
+    get allSections(){
+        return $('.mt-section');
+    }
+
     get container(){
         return $('main .article-container');
     }
@@ -46,11 +50,9 @@ export default class KB {
                 top: self.topSpace,
                 right: '5%'
             });
-        $('body').append(this.jumpBox);
-    }
 
-    setup(){
-        this.createJumpBox()
+        $('body').append(this.jumpBox);
+
         this.sections.forEach((el) => {
             this.jumpBox.append($('<a/>', {
                 href: `#${el.target.attr('id')}`,
@@ -60,9 +62,24 @@ export default class KB {
         })
     }
 
-    run(){
+    createDirectClick(){
+        const clickFunction = function(e){
+            e.stopPropagation();
 
+            const id = $(this).closest('.mt-section').attr('id');
+            const { origin, pathname } = window.location;
 
+            window.location.href = `${origin}${pathname}#${id}`;
+        }
+
+        this.allSections.on('click', 'h2', clickFunction);
+        this.allSections.on('click', 'h3', clickFunction);
+        this.allSections.on('click', 'h4', clickFunction);
+    }
+
+    setup(){
+        this.createJumpBox();
+        this.createDirectClick();
     }
 
 }
