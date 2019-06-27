@@ -4,15 +4,10 @@ const defaultSite = '.*?.decipherinc.com';
 const browser = browser || chrome;
 
 function save_options() {
-    console.log('save');
-    const sites = document.getElementById('sites').value.split(/\s+|\n+|[,]+/);
+    let sites = document.getElementById('sites').value.split(/\s+|\n+|[,]+/).filter(site => site !== '');
     const special = document.getElementById('special').checked;
     const specialx2 = document.getElementById('specialx2').checked;
     const showModal = document.getElementById('showmodal').checked;
-
-    if ( sites.indexOf( defaultSite ) === -1 ){
-        sites.push( defaultSite );
-    }
 
     browser.storage.sync.set({
             sites: sites,

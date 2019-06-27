@@ -29,40 +29,40 @@ export default () => {
         { t: 'alt+g', f: ans.AutoMate.bind(ans) },
 
         // Go to Survey without variables
-        { t: 'alt+t', f: sc.goTO.bind(sc, 'survey', '?mm') },
+        { t: 'alt+t', f: sc.goToSurvey },
 
         // Go to question in the survey (does not ignore conditions)
-        { t: 'alt+s', f: sc.startAtPage.bind(sc) },
+        { t: 'alt+s', f: sc.startAtPage },
 
         // Go to question in the survey (ignores conditions)
-        { t: 'alt+h', f: sc.goToPage.bind(sc) },
+        { t: 'alt+h', f: sc.goToPage },
 
         // Edit quotas if on quota page
         // { t: 'alt+e', f: console.log.bind(null, 'e') },
 
         // Go to report 2010
-        { t: 'alt+r', f: sc.goTO.bind(sc, 'report', '') },
+        { t: 'alt+r', f: sc.goToRep2010 },
 
         // Go to survey portal page
-        { t: 'alt+p', f: sc.goTO.bind(sc, 'apps/portal/#/projects/detail', '') },
+        { t: 'alt+p', f: sc.goToPortal },
 
         // Go to survey quota page
-        { t: 'alt+q', f: sc.goTO.bind(sc, 'rep', ':dashboard?tab=quota&split=none') },
+        { t: 'alt+q', f: sc.goToQuota },
 
         // Go to survey sst page
-        { t: 'alt+w', f: sc.goTO.bind(sc, 'admin/sst/list?survey=', '', false) },
+        { t: 'alt+w', f: sc.goToSST },
 
         // Go to survey upload manager
-        { t: 'alt+u', f: sc.goTO.bind(sc, 'apps/filemanager', '') },
+        { t: 'alt+u', f: sc.goToUpload },
 
         // Go to survey version history
-        { t: 'alt+v', f: sc.goTO.bind(sc, 'admin/vc/list?file=', '/survey.xml', false) },
+        { t: 'alt+v', f: sc.goToVersionHistory },
 
         // Go to crosstabs
-        { t: 'alt+c', f: sc.goTO.bind(sc, 'apps/report', '') },
+        { t: 'alt+c', f: sc.goToCrosstabs },
 
         // Set the survey to flow mode
-        { t: 'alt+f', f: sc.goTO.bind(sc, 'survey', '?&debug=flow') },
+        { t: 'alt+f', f: sc.goToFlow },
     ]);
     const testKeys = kb.testKeys.bind(kb);
 

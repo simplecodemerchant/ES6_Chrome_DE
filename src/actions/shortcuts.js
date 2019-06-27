@@ -2,44 +2,81 @@ import { qs, misc } from "../helpers"
 
 class Shortcuts {
 
-    url_no_host(){
+    static url_no_host(){
         return window.location.pathname + window.location.search;
     }
 
-    baseURL(){
+    static baseURL(){
         return window.location.protocol + '//' + misc.url_host() + '/';
     }
 
-    startAtPage() {
+    static startAtPage() {
         const value = prompt('Which question should I start at?', 'Q');
         if (value) {
-            this.goTO('survey', `?&start-at=${value}`);
+            Shortcuts.goTO('survey', `?&start-at=${value}`);
         }
     }
 
-    goToPage() {
+    static goToPage() {
         const value = prompt('Which question should I go to?', 'Q');
         if (value) {
-            this.goTO('survey', `?&start-at=${value}&stop-at=${value}&debug=flow`);
+            Shortcuts.goTO('survey', `?&start-at=${value}&stop-at=${value}&debug=flow`);
         }
     }
 
-    goTO(front, back, leading) {
-        leading = ( leading === undefined || leading === true ) ? '/' : '';
-        const projectAddress = this.getProject();
+    static goTO(front, back, options={}) {
+        const leading = ( options.leading === undefined || options.leading === true ) ? '/' : '';
 
-        if (projectAddress) {
-            window.location.href = this.baseURL() + front + leading + projectAddress + back;
+        let projectAddress;
+        if (options.path){
+            projectAddress = options.path;
+        } else {
+            projectAddress = Shortcuts.getProject();
+        }
+
+        if (options.origin){
+            return options.origin + '/' + front + leading + projectAddress + back;
+        } else {
+            window.location.href = Shortcuts.baseURL() + front + leading + projectAddress + back;
         }
     }
 
-    getProject() {
-        let url = this.url_no_host(),
+    static goToSurvey(options={}){
+        return Shortcuts.goTO( 'survey', '?mm', { ...options })
+    }
+    static goToRep2010(options={}){
+        return Shortcuts.goTO('report', '', { ...options })
+    }
+    static goToPortal(options={}){
+        return Shortcuts.goTO('apps/portal/#/projects/detail', '', { ...options })
+    }
+    static goToQuota(options={}){
+        return Shortcuts.goTO('rep', ':dashboard?tab=quota&split=none', { ...options })
+    }
+    static goToSST(options={}){
+        return Shortcuts.goTO('admin/sst/list?survey=', '', { leading: false, ...options })
+    }
+    static goToUpload(options={}){
+        return Shortcuts.goTO('apps/filemanager', '', { ...options })
+    }
+    static goToVersionHistory(options={}){
+        return Shortcuts.goTO('admin/vc/list?file=', '/survey.xml', { leading: false, ...options })
+    }
+    static goToCrosstabs(options={}){
+        return Shortcuts.goTO('apps/report', '', { ...options })
+    }
+    static goToFlow(options={}){
+        return Shortcuts.goTO('survey', '?&debug=flow', { ...options })
+    }
+
+
+    static getProject() {
+        let url = Shortcuts.url_no_host(),
             urlback;
 
-        if ( url.match(/(takesurvey\/|survey\/|report\/|rep\/|filemanager\/)/) ) {
+        if ( url.match(/(takesurvey\/|survey\/|report\/|rep\/|filemanager\/|dashboard\/)/) ) {
             url     = window.location.protocol + '//' + window.location.host + window.location.pathname;
-            urlback = url.split(/\/filemanager|\/report|\/rep|\/survey|\/takesurvey/)[1];
+            urlback = url.split(/\/filemanager|\/report|\/rep|\/survey|\/takesurvey|\/dashboard/)[1];
             urlback = urlback.split('?')[0];
             urlback = urlback.split(':')[0];
 
@@ -68,19 +105,10 @@ class Shortcuts {
         return "";
     }
 
-    getState(){
+    static getState(){
         prompt('Here\'s your state link', location.protocol + '//' + location.host + location.pathname + '?state=' + qs('[name=state]').value);
     }
 
-
-
-    run(){
-
-    }
 }
 
-
-const shortcuts = new Shortcuts();
-shortcuts.run();
-
-export default shortcuts;
+export default Shortcuts;

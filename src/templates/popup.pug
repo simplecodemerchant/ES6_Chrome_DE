@@ -19,16 +19,17 @@ block content
                     button(class="btn" id="save" type="input") Save
                     button(class="btn" id="cancel" type="input") Cancel
         div(id="tabs")
-            a(href="#" class='tab' data-tab="bookmark") Bookmarks
+            a(href="#" class='tab' data-tab="bookmarks") Bookmarks
             a(href="#" class='tab' data-tab="info") Info
+            a(href="#" class='tab' data-tab="projects") Projects
 
-        div(id="bookmarks" class="element")
+        div(id="bookmarks" class="tab-element element")
             div(class="input-container")
                 input(type="text" placeholder="Search..." name="bookmarksearch" class="bookmark-search" autofocus)
 
             div(class="bookmark-list")
 
-        div(id="info" class="element hidden")
+        div(id="info" class="tab-element element hidden")
             h2 Shortcuts
             h3 Survey
             table
@@ -119,6 +120,8 @@ block content
                 tr
                     td alt+c
                     td Go to CrossTabs
+        div(id="projects", class="tab-element element hidden")
+            table
 
 
 
