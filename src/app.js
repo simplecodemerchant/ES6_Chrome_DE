@@ -1,5 +1,4 @@
 import { validateSite, qsa, qs } from './helpers'
-import $ from './helpers/jquery'
 import acts from './actions/main'
 import qb from './actions/quotabuddy'
 import exceptions from './actions/exceptions'

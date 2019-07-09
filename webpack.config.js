@@ -2,7 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 
-module.exports = {
+const config = {
     target: 'web',
     devtool: 'inline-source-map',
     entry: {
@@ -33,3 +33,6 @@ module.exports = {
         }),
     ]
 };
+
+
+module.exports = config;
