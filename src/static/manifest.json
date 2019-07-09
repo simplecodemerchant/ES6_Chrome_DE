@@ -3,7 +3,7 @@
 
   "name": "FocusVision Keyboard Shortcuts for Decipher",
   "description": "This extension provides keyboard shortcuts for navigating around surveys",
-  "version": "3.0.1",
+  "version": "3.1.1",
   "author": "matt92martin",
   "content_scripts": [{
     "matches": ["<all_urls>"],
@@ -16,6 +16,7 @@
     ],
     "run_at": "document_end"
   }],
+  "omnibox": { "keyword" : "fv" },
   "background": {
     "scripts": [
       "js/background.js"
@@ -30,6 +31,9 @@
   ],
   "options_ui": {
     "page": "options.html"
+  },
+  "icons": {
+    "16": "Deciphericon.png"
   },
   "browser_action": {
     "default_title": "FV Decipher",

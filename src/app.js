@@ -3,24 +3,17 @@ import acts from './actions/main'
 import qb from './actions/quotabuddy'
 import exceptions from './actions/exceptions'
 import ans from './actions/answers'
+import Favorites from './actions/favorites'
+import { checkExistence } from './helpers/checkExistence'
 
 
 export default class App {
     constructor( options ) {
         this.options = options;
 
-        this.location = {
-            onQuota:  App.onQuota(),
-            onCamp:   App.onCamp(),
-            onTerm:   App.onTerm(),
-            onDrop:   App.onDrop(),
-            onSurvey: App.onSurvey(),
-            onExcept: App.onExcept(),
-            onPortal: App.onPortal(),
-            onDashboard: App.onDashboard(),
-        };
-
         this.validSite = validateSite(this.options.sites);
+
+        this.run();
     }
     windowResize(){
         const windowHeight     = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -30,32 +23,32 @@ export default class App {
     }
 
 
-    static onQuota() { return window.location.href.indexOf('tab=quota') !== -1 }
-    static onCamp(){ return window.location.href.indexOf('tab=email') !== -1 }
-    static onTerm(){ return window.location.href.indexOf('tab=terminate') !== -1 }
-    static onDrop(){ return window.location.href.indexOf('tab=dropout') !== -1 }
-    static onSurvey(){ return !!qsa('body.survey-page').length }
-    static onExcept(){ return !!qsa('div.exceptions').length }
-    static onPortal(){ return window.location.href.indexOf('apps/portal/#/projects/detail') !== -1 }
-    static onDashboard(){ return window.location.href.indexOf('apps/dashboard') !== -1 }
+    static get onQuota() { return window.location.href.indexOf('tab=quota') !== -1 }
+    static get onCamp(){ return window.location.href.indexOf('tab=email') !== -1 }
+    static get onTerm(){ return window.location.href.indexOf('tab=terminate') !== -1 }
+    static get onDrop(){ return window.location.href.indexOf('tab=dropout') !== -1 }
+    static get onSurvey(){ return !!qsa('body.survey-page').length }
+    static get onExcept(){ return !!qsa('div.exceptions').length }
+    static get onPortal(){ return window.location.href.indexOf('apps/portal/#/projects/detail') !== -1 }
+    static get onDashboard(){ return window.location.href.indexOf('apps/dashboard') !== -1 }
 
     run(){
 
-        if ( this.location.onDashboard ){
-            return;
-        }
+        checkExistence('#fv-nav',5,function(){
+            new Favorites();
+        })
 
-        if ( this.validSite )   {
-            acts();
-        }
+        if ( App.onDashboard ) return;
 
-        if ( this.location.onExcept ){
+        if ( this.validSite ) acts();
+
+        if ( App.onExcept ){
             this.windowResize();
             exceptions.run();
             window.addEventListener('resize', this.windowResize);
         }
 
-        if ( this.location.onPortal && this.options.showModal ){
+        if ( App.onPortal && this.options.showModal ){
             qs('.title-row').classList.add('always-display');
         }
 
@@ -66,12 +59,12 @@ export default class App {
         } else if ( this.validSite && qsa( '.devToggle.expanded' ).length ){
             qsa( '.surveyInfo, .survey-info' ).forEach((el) => el.style.display = 'block');
 
-        } else if ( this.location.onQuota ) {
+        } else if ( App.onQuota ) {
             body.classList.add( 'quota-page' );
             if ( this.options.special ) body.classList.add( 'shortcut-page-fix' );
             qb.run()
 
-        } else if ( ( this.location.onCamp || this.location.onTerm || this.location.onDrop ) && this.options.special ){
+        } else if ( ( App.onCamp || App.onTerm || App.onDrop ) && this.options.special ){
             body.classList.add( 'shortcut-page-fix' );
         }
 

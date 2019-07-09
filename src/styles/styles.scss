@@ -212,3 +212,23 @@
   }
 
 }
+
+
+/************************Favorite**********************************/
+
+.favorite-icon{
+  font-size: 14px;
+
+  &.selected{
+    color: yellow;
+  }
+}
+#favorite-project{
+  flex: 0 20px;
+
+  &.selected{
+    .favorite-icon{
+      color: yellow;
+    }
+  }
+}

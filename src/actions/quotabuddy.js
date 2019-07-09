@@ -58,7 +58,7 @@ class QuotaBuddy {
         }, 50);
     }
     cancel(){
-        if (App.onQuota()){
+        if (App.onQuota){
             const cancel = $('.cancel-link');
             cancel[0].click();
 

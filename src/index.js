@@ -1,30 +1,20 @@
-import { getBrowser } from './helpers'
+import { sync as Sync } from "./store";
 import App from './app'
 import KB from './actions/kb'
 import './styles/styles.scss'
 import $ from './helpers/jquery'
-import Prank, { RightDate } from './helpers/prank'
+// import Prank, { RightDate } from './helpers/prank'
 
-class Index{
 
-    run(){
-        console.log('running')
-        getBrowser().runtime.sendMessage({
-            type: 'sites'
-        },
-        ( resp ) => {
-            if ( resp.payload.specialx2 && RightDate() ) { Prank() }
-            (new App( resp.payload )).run();
+const Index = () => {
+    console.log('running');
 
-            const kb = new KB(['decipher.zendesk.com']);
-            if (kb.onKB){
-                kb.run();
-            }
-        });
-
-    }
-}
+    Sync.init().then(resp => {
+        new App( resp );
+        new KB( ['decipher.zendesk.com'] );
+    });
+};
 
 $(function(){
-    (new Index()).run();
+    Index()
 });

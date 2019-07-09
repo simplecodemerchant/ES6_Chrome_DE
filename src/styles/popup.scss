@@ -123,3 +123,49 @@ $color: #37474F;
         }
     }
 }
+
+#projects{
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+    tr:nth-child(2n+1){
+        .project{
+            background-color: #f2f2f2;
+        }
+    }
+    .project{
+        max-width: 0;
+        width: 100%;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 2px 10px;
+
+        &:hover{
+            background-color: #37474F !important;
+            color: #ffffff !important;
+        }
+    }
+    .project-link{
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+        padding: 2px 5px;
+    }
+    .project-link-items{
+        flex: 1;
+        margin: 0 5px;
+        padding: 5px;
+        text-align: center;
+        color: #FAFAFA;
+        font-weight: bold;
+
+        &:nth-child(1){ background-color: #e57373; }
+        &:nth-child(2){ background-color: #FF9800; }
+        &:nth-child(3){ background-color: #607D8B; }
+        &:nth-child(4){ background-color: #81D4FA; }
+    }
+
+}

@@ -1,7 +1,7 @@
 
 export const RightDate = () => {
     const today = new Date();
-    return (today.getMonth() === 4 && today.getDate() === 1);
+    return (today.getMonth() === 3 && today.getDate() === 1);
 };
 
 
