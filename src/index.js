@@ -14,7 +14,7 @@ const Index = () => {
         new KB( ['decipher.zendesk.com'] );
     });
 };
-
+console.log('change 3')
 $(function(){
     Index()
 });

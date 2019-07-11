@@ -21,7 +21,12 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-pug": "^1.0.0",
     "grunt-webpack": "^3.1.1",
-    "gulp-cli": "^2.2.0",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-watch": "^5.0.1",
+    "gulp-zip": "^5.0.0",
     "jquery": "^3.3.1",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.8.3",
@@ -37,7 +42,8 @@
     "build:dev": "webpack --watch",
     "gulp:start": "gulp",
     "start": "grunt",
-    "prod": "grunt prod"
+    "prod": "grunt prod",
+    "gulp": "gulp"
   },
   "dependencies": {
     "immer": "^3.1.3",
