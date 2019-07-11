@@ -320,7 +320,7 @@ class Answers {
     }
 
     fillOE(tr){
-        const text = tr.find(".row-legend input:text");
+        const text = tr.find(".row-legend input:text, input.oe");
         if ( text.length ){
             text.each(function() {
                 $(this).val(93612).trigger('change');
@@ -489,7 +489,7 @@ class Answers {
         } else {
             trs = self.shuffleArray(trs);
             atmost = self.getAtMost(atmost, trs);
-
+            console.log(trs);
             for ( let i=0; i<atmost; i++ ){
                 trs.eq(i).each(function(){
                     self.fillOE($(this));
