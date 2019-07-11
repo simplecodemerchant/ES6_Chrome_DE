@@ -234,9 +234,13 @@ class Answers {
 
         if ( Number.isInteger(amount) ){
 
-            const numbers = question.find('.row:has(input:text), .row:has(input[type="tel"])');
+            let numbers = question.find('.row:has(input:text), .row:has(input[type="tel"])');
+
             if ( !numbers.length ){
-                return;
+
+                numbers = question.find('.element:has(input:text), .element:has(input[type="tel"])');
+
+                if ( !numbers.length ) { return }
             }
 
             let count      = numbers.length;
@@ -244,13 +248,11 @@ class Answers {
             let lastamount = newamount + ( amount - ( newamount * count ) );
             let num_el;
 
-
             if ( question.find(".groupingRows").length ){
 
                 numbers.each(function(){
 
-                    num_el = $(this).find('.element input:text, .element input[type="tel"]');
-
+                    num_el = $(this).find('input:text, input[type="tel"]').not('.oe');
 
                     count = num_el.length;
                     newamount = Math.floor( amount / count );
@@ -489,7 +491,7 @@ class Answers {
         } else {
             trs = self.shuffleArray(trs);
             atmost = self.getAtMost(atmost, trs);
-            console.log(trs);
+
             for ( let i=0; i<atmost; i++ ){
                 trs.eq(i).each(function(){
                     self.fillOE($(this));
