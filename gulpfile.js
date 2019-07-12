@@ -7,20 +7,22 @@ const rename = require('gulp-rename')
 const watch = require('gulp-watch')
 const zip = require('gulp-zip');
 
-function clean(){
-    return src('dist/', {
+function clean(folder){
+    return src(folder, {
         read: false,
         allowEmpty: true
     })
         .pipe(gulp_clean())
 }
+const clean_dev = () => clean('dist/');
+const clean_prod = () => clean('distzip/');
 
 function copy(){
     return src('src/static/*')
         .pipe(dest('dist/'))
 }
 
-function pug_dev(){
+function pug(){
     return src('src/templates/*.pug')
         .pipe(rename({
             extname: '.html'
@@ -29,7 +31,7 @@ function pug_dev(){
 
 }
 
-function webpack_dev(mode){
+function webpacker(mode){
     let config;
 
     if (mode === 'production'){
@@ -54,6 +56,13 @@ function webpack_dev(mode){
         })
     })
 
+}
+
+function webpack_dev(){
+    return webpacker('development')
+}
+function webpack_prod(){
+    return webpacker('production')
 }
 
 function watcherjs(){
@@ -81,17 +90,18 @@ function zipfiles(cb){
 }
 
 exports.default = series(
-    clean,
+    clean_dev,
     copy,
-    pug_dev,
+    pug,
     webpack_dev,
     watchers
 )
 
 exports.prod = series(
-    clean,
+    clean_dev,
+    clean_prod,
     copy,
-    pug_dev,
-    webpack_dev,
+    pug,
+    webpack_prod,
     zipfiles
 )
