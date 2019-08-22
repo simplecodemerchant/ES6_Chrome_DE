@@ -6,6 +6,7 @@ const pug = require('gulp-pug')
 const rename = require('gulp-rename')
 const watch = require('gulp-watch')
 const zip = require('gulp-zip');
+const path = require('path')
 
 function clean(){
     return src('dist/', {
@@ -57,7 +58,7 @@ function webpack_dev(mode){
 }
 
 function watcherjs(){
-    return watch('src/**/*.js', function(){
+    return watch('src/**/*.js', function(f){
         console.log('JS changes...Recompiling')
         webpack_dev()
     })

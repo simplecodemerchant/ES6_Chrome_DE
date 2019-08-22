@@ -15,12 +15,12 @@ export default class Favorites {
         this.run()
     }
 
-    addStar(){
+    add_star(){
         this.header.prepend(this.html);
     }
 
     add_project(){
-        local.add_project({
+        return local.add_project({
             id: uuid(),
             origin: this.origin,
             title: this.title,
@@ -29,10 +29,10 @@ export default class Favorites {
     }
 
     remove_project(){
-        local.remove_project(this.survey_path);
+        return local.remove_project(this.survey_path);
     }
 
-    checkStatus(){
+    check_status(){
         local.has_project(this.survey_path).then(resp =>{
             if (resp){
                 this.html.addClass('selected')
@@ -41,7 +41,7 @@ export default class Favorites {
     }
 
 
-    addEvents(){
+    add_events(){
         const self = this;
 
         this.html.on('click', function(){
@@ -59,8 +59,8 @@ export default class Favorites {
     }
 
     run(){
-        this.addStar();
-        this.checkStatus();
-        this.addEvents();
+        this.add_star();
+        this.check_status();
+        this.add_events();
     }
 }

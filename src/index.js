@@ -3,7 +3,6 @@ import App from './app'
 import KB from './actions/kb'
 import './styles/styles.scss'
 import $ from './helpers/jquery'
-// import Prank, { RightDate } from './helpers/prank'
 
 
 const Index = () => {

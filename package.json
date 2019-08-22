@@ -35,8 +35,6 @@
     "build": "webpack",
     "build:dev": "webpack --watch",
     "gulp:start": "gulp",
-    "start": "grunt",
-    "prod": "grunt prod",
     "gulp": "gulp"
   },
   "dependencies": {
