@@ -46,7 +46,11 @@ export default class App {
 
         if ( App.onDashboard ) return;
 
-        if ( this.validSite ) acts();
+        if ( this.validSite ) {
+            acts({
+                onSurvey: App.onSurvey
+            });
+        }
 
         if ( App.onExcept ){
             this.windowResize();
