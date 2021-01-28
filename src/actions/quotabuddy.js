@@ -16,6 +16,7 @@ class QuotaBuddy {
     }
 
     gotoquota(el) {
+        const stage    = document.getElementById('stage');
         const goto     = el.getAttribute('data-goto');
         const subtable = gid(goto);
         const sheet    = getClosest(subtable, '.quota-sheet');
@@ -28,17 +29,37 @@ class QuotaBuddy {
         const searchVal = e.target.value.toLowerCase();
         const searchTRs = gid('qbTable').querySelectorAll('table tr');
 
+        let lastHeaderPassed;
+        let anyTRsShown = false;
+
         for( let st of searchTRs ){
 
-            let atag = st.querySelector('a');
+            if( st.classList.contains( 'row-legend' ) ) {
+                if (lastHeaderPassed && !anyTRsShown){
+                    lastHeaderPassed.style.display = 'none';
+                } else if(lastHeaderPassed) {
+                    lastHeaderPassed.style.display = 'table-row';
+                }
+                anyTRsShown = false
+                lastHeaderPassed = st;
+            }
+
+            let atag = st.querySelector('button');
 
             const text = (atag) ? atag.innerText.toLowerCase() : '';
-            if ( text.indexOf( searchVal ) > -1 || st.classList.contains( 'row-legend' ) ) {
-                st.style.display = 'block';
+            if ( text.indexOf( searchVal ) > -1 ) {
+                st.style.display = 'table-row';
+                anyTRsShown = true;
             }
             else {
                 st.style.display = 'none';
             }
+        }
+
+        if (lastHeaderPassed && !anyTRsShown){
+            lastHeaderPassed.style.display = 'none';
+        } else if(lastHeaderPassed) {
+            lastHeaderPassed.style.display = 'table-row';
         }
     }
 
@@ -85,8 +106,8 @@ class QuotaBuddy {
 					<div id="qbHead">
 						<div id="qbSearch"><input type="text" name="quotaLU" placeholder="Search Quotas ..." /></div>
 						<div class="spQB">
-							<button id="hideAll" class="spQBa qbred">Hide all quota sheets</button>
-							<button id="showAll" class="spQBa qbgreen">Show all quota sheets</button>
+							<button id="hideAll" class="spQBa qbred">Hide all</button>
+							<button id="showAll" class="spQBa qbgreen">Show all</button>
 						</div>
 					</div>
 					<div id="qbTable">
@@ -114,7 +135,7 @@ class QuotaBuddy {
 
                 for ( let st of subtables ){
                     rowtext = `<td class="quotaTogglers">
-									<a  href="javascript:void(0)" class="goto goto-${table.id}" data-goto="${table.id}">${st.innerText}</a>
+									<button class="goto goto-${table.id}" data-goto="${table.id}">${st.innerText}</button>
 								</td>`;
 
                     misc.addRow(qBuddyT, rowtext);
@@ -125,7 +146,7 @@ class QuotaBuddy {
 
         qBuddyT.addEventListener('click', (e) => {
             if ( e.target.classList.contains('goto') ){
-                return this.gotoquota(event.target);
+                return this.gotoquota(e.target);
             }
             return false;
         });
