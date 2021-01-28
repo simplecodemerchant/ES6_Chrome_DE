@@ -156,14 +156,15 @@
   .table.table-single-line thead{
     background-color: #16263b;
   }
-  .table thead tr>th{
+  .table thead tr th{
+    border: 1px solid #16263b;
     color: #FFFFFF;
+    a {
+      color: #FFFFFF !important;
+    }
   }
   .table.table-single-line tbody tr:hover{
     background-color: rgba(0,0,0,0.075);
-  }
-  .table thead tr th{
-    border: 1px solid #16263b;
   }
   .table tbody tr td{
     box-shadow: none !important;

@@ -16,9 +16,9 @@ export default class KB {
         return this.validSite
     }
     get topSpace(){
-        const containerOffset = $('.article-container').offset();
-
-        return containerOffset.top;
+        const containerOffset = $('.article-container');
+        
+        return containerOffset.length ? containerOffset.offset().top : undefined;
     }
     get sections(){
         const sections = [];
@@ -45,21 +45,24 @@ export default class KB {
     }
 
     createJumpBox(){
-        const self = this;
-        this.jumpBox = $('<div/>', {class: 'jump-box'}).css({
-                top: self.topSpace,
-                right: '5%'
-            });
+        if (this.sections.length > 0){
+            const self = this;
 
-        $('body').append(this.jumpBox);
+            this.jumpBox = $('<div/>', {class: 'jump-box'}).css({
+                    top: self.topSpace,
+                    right: '5%'
+                });
 
-        this.sections.forEach((el) => {
-            this.jumpBox.append($('<a/>', {
-                href: `#${el.target.attr('id')}`,
-                text: el.text,
-                class: 'jb-item'
-            }));
-        })
+            $('body').append(this.jumpBox);
+            this.sections.forEach((el) => {
+                this.jumpBox.append($('<a/>', {
+                    href: `#${el.target.attr('id')}`,
+                    text: el.text,
+                    class: 'jb-item'
+                }));
+            })
+            
+        }
     }
 
     createDirectClick(){
@@ -78,8 +81,10 @@ export default class KB {
     }
 
     setup(){
-        this.createJumpBox();
-        this.createDirectClick();
+        if (this.topSpace !== undefined){
+            this.createJumpBox();
+            this.createDirectClick();
+        }
     }
 
 }

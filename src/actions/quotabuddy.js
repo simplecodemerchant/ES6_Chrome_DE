@@ -85,8 +85,8 @@ class QuotaBuddy {
 					<div id="qbHead">
 						<div id="qbSearch"><input type="text" name="quotaLU" placeholder="Search Quotas ..." /></div>
 						<div class="spQB">
-							<button id="hideAll" class="spQBa qbred">-</button>
-							<button id="showAll" class="spQBa qbgreen">+</button>
+							<button id="hideAll" class="spQBa qbred">Hide all quota sheets</button>
+							<button id="showAll" class="spQBa qbgreen">Show all quota sheets</button>
 						</div>
 					</div>
 					<div id="qbTable">
