@@ -16,6 +16,7 @@ class Store {
     constructor(){
         this.store = getBrowser().storage.local;
     }
+
     get(keys){
         return new Promise(res => {
             this.store.get(keys, resp => {
@@ -120,10 +121,10 @@ class Sync extends Store{
 
         return {
             ...resp,
-            sites: this.defaultSite(resp['sites'])
+            sites: this.default_site(resp['sites'])
         }
     }
-    defaultSite(sites){
+    default_site(sites){
 
         if ( sites.indexOf( defaultSite ) === -1 ){
             sites.push( defaultSite );

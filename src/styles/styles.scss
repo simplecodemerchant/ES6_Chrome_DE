@@ -41,12 +41,19 @@
   #qbTable{
     display: flex;
     flex: 1 0 80%;
-    width: calc(100% - 10px);
+    width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
 
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    table {
+      width: 100%;
+    }
+    td{
+      width: 100%;
     }
 
   }
@@ -78,9 +85,9 @@
   }
 
 }
-#quotaBuddy #qbTable td{
-  height: 15px;
-}
+// #quotaBuddy #qbTable td{
+//   height: 15px;
+// }
 #quotaBuddy #qbHead{
   flex: 0 1;
   width: 100%;
@@ -89,6 +96,7 @@
 }
 
 .spQB{
+  display: flex;
   width: 100%;
   height: 25px;
   padding: 0;
@@ -96,8 +104,10 @@
   overflow: hidden;
 }
 .spQBa{
-  float:left;
-  width: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 50%;
   height: 100%;
   color: white;
   margin: 0;
@@ -105,9 +115,10 @@
   border: none;
   font-weight: bold;
   font-size: 16px;
+  line-height: 16px;
   border-radius: 0;
 }
-.qbred{background-color: #db3236;}
+.qbred{background-color: #ff8787;}
 .qbgrey{background-color: #898989;}
 .qbgreen{background-color: #3cba54;}
 #qbSearch{
@@ -124,6 +135,15 @@
 .quotaTogglersHead{
   padding-left: 10px;
 }
+.row-legend td {
+  padding: 5px;
+  padding-bottom: 2px;
+  padding-top: 15px;
+  line-height: 20px;
+  font-size: 20px;
+  border-bottom: 1px solid #dddddd;
+  
+}
 .quotaTogglersHead td{
   padding-left: 10px;
 }
@@ -132,7 +152,14 @@
   font-weight: bold;
 }
 .quotaTogglers{
-  padding-left: 20px;
+  padding: 2px 20px;
+
+  button{
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+    width: 100%;
+  }
 }
 
 
@@ -156,14 +183,15 @@
   .table.table-single-line thead{
     background-color: #16263b;
   }
-  .table thead tr>th{
+  .table thead tr th{
+    border: 1px solid #16263b;
     color: #FFFFFF;
+    a {
+      color: #FFFFFF !important;
+    }
   }
   .table.table-single-line tbody tr:hover{
     background-color: rgba(0,0,0,0.075);
-  }
-  .table thead tr th{
-    border: 1px solid #16263b;
   }
   .table tbody tr td{
     box-shadow: none !important;

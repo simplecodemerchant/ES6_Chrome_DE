@@ -5,6 +5,7 @@ import exceptions from './actions/exceptions'
 import ans from './actions/answers'
 import Favorites from './actions/favorites'
 import { checkExistence } from './helpers/checkExistence'
+import Clips from './clips'
 
 
 export default class App {
@@ -28,6 +29,7 @@ export default class App {
     static get onTerm(){ return window.location.href.indexOf('tab=terminate') !== -1 }
     static get onDrop(){ return window.location.href.indexOf('tab=dropout') !== -1 }
     static get onSurvey(){ return !!qsa('body.survey-page').length }
+    static get onXMLEditor(){ return window.location.href.indexOf(':xmledit') !== -1 }
     static get onExcept(){ return !!qsa('div.exceptions').length }
     static get onPortal(){ return window.location.href.indexOf('apps/portal/#/projects/detail') !== -1 }
     static get onDashboard(){ return window.location.href.indexOf('apps/dashboard') !== -1 }
@@ -38,9 +40,17 @@ export default class App {
             new Favorites();
         })
 
+        if ( App.onXMLEditor ){
+            return Clips();
+        }
+
         if ( App.onDashboard ) return;
 
-        if ( this.validSite ) acts();
+        if ( this.validSite ) {
+            acts({
+                onSurvey: App.onSurvey
+            });
+        }
 
         if ( App.onExcept ){
             this.windowResize();
