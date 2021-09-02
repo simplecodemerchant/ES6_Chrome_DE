@@ -38,7 +38,7 @@
     "gulp": "gulp"
   },
   "dependencies": {
-    "immer": "^3.3.0",
+    "immer": "^9.0.6",
     "mocha": "^8.2.1",
     "puppeteer": "^5.5.0",
     "react": "^16.14.0",
